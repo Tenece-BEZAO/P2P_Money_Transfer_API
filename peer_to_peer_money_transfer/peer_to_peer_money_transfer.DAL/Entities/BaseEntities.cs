@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace peer_to_peer_money_transfer.DAL.Entities
 {
     public class BaseEntities
@@ -17,10 +19,13 @@ namespace peer_to_peer_money_transfer.DAL.Entities
 
         public string Address { get; set; } = null!;
 
+        [NotMapped]
         public bool Verified { get; set; } = false;
 
+        [NotMapped]
         public bool Activated { get; set; } = false;
 
+        [NotMapped]
         public bool Lien { get; set; } = false;
     
         public TransactionHistory? transactionHistory { get; set; } 
