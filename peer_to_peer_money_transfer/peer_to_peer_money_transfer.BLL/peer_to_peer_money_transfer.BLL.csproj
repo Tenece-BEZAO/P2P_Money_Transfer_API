@@ -10,4 +10,8 @@
     <ProjectReference Include="..\peer_to_peer_money_transfer.DAL\peer_to_peer_money_transfer.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="PayStack.Net" Version="1.1.0" />
+  </ItemGroup>
+
 </Project>
