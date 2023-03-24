@@ -8,8 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		  <PrivateAssets>all</PrivateAssets>
+	  </PackageReference>
   </ItemGroup>
-
+	
   <ItemGroup>
     <ProjectReference Include="..\peer_to_peer_money_transfer.BLL\peer_to_peer_money_transfer.BLL.csproj" />
     <ProjectReference Include="..\peer_to_peer_money_transfer.Shared\peer_to_peer_money_transfer.Shared.csproj" />
