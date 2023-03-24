@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using PayStack.Net;
+using peer_to_peer_money_transfer.DAL.Context;
+
 namespace peer_to_peer_money_transfer.API
 {
     public class Program
@@ -13,6 +17,10 @@ namespace peer_to_peer_money_transfer.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            string connectionString = builder.Configuration.GetConnectionString("DefaultConn");
+            builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(
+            builder.Configuration.GetConnectionString("DefaultConn")));
+            //builder.Services.AddScoped < IPayStackApi,PayStackApi(builder.Configuration.GetSection("ApiSecret")["SecretKey"])>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
