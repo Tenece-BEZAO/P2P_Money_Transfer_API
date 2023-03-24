@@ -11,7 +11,7 @@ using peer_to_peer_money_transfer.BLL.Infrastructure;
 
 namespace peer_to_peer_money_transfer.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("CashMingle/[controller]")]
     public class Transaction : Controller
     {
         // GET: api/values
@@ -29,9 +29,10 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Gets name with AccountNumber", Type = typeof(SuccessResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        public string GetReceiverName(string AccountNumber)
+        public IActionResult GetReceiverName(string AccountNumber)
         {
-            return Ok();
+            var model = "hey hey";
+            return Ok(model);
         }
 
         [HttpGet("{id}")]
