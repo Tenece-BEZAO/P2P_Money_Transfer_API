@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
-namespace ToDoList.Data.Interfaces
+namespace peer_to_peer_money_transfer.DAL.Interfaces
 {
     public interface IRepository<T>
     {

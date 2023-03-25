@@ -17,7 +17,7 @@ namespace peer_to_peer_money_transfer.DAL.Entities
 
         public string LastName { get; set; } = null!;
 
-        public string? Middle { get; set; }
+        public string? MiddleName { get; set; }
 
         public ProfileName ProfileName { get; set; }
 
