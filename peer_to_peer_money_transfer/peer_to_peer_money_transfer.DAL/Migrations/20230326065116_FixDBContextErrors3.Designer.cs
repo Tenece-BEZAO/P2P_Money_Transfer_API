@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using peer_to_peer_money_transfer.DAL.Context;
 
@@ -11,9 +12,11 @@ using peer_to_peer_money_transfer.DAL.Context;
 namespace peer_to_peer_money_transfer.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230326065116_FixDBContextErrors3")]
+    partial class FixDBContextErrors3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,12 +291,13 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
             modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.ApplicationUserRole", b =>
                 {
                     b.Property<int>("ApplicationUserId")
-                        .HasMaxLength(450)
                         .HasColumnType("int");
 
                     b.Property<int>("ApplicationRoleId")
-                        .HasMaxLength(450)
                         .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserId1")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
@@ -304,6 +308,8 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ApplicationUserId", "ApplicationRoleId");
+
+                    b.HasIndex("ApplicationUserId1");
 
                     b.HasIndex("RoleId");
 
@@ -417,16 +423,20 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
 
             modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.ApplicationUserRole", b =>
                 {
+                    b.HasOne("peer_to_peer_money_transfer.DAL.Entities.ApplicationUser", "ApplicationUser")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("ApplicationUserId1");
+
                     b.HasOne("peer_to_peer_money_transfer.DAL.Entities.ApplicationRole", "ApplicationRole")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("peer_to_peer_money_transfer.DAL.Entities.ApplicationUser", "ApplicationUser")
-                        .WithMany("UserRoles")
+                    b.HasOne("peer_to_peer_money_transfer.DAL.Entities.ApplicationUser", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ApplicationRole");

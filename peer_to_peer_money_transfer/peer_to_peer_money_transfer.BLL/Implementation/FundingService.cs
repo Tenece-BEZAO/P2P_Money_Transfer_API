@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
+
 using PayStack.Net;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 
@@ -15,7 +17,9 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         }
         public Task FundAccount()
         {
-            
+        
+           string connectionString = (string) ConfigurationManager.GetSection("ApiSecret/SecretKey");
+            PayStackApi payStack = new(connectionString);
            
             throw new NotImplementedException();
         }
