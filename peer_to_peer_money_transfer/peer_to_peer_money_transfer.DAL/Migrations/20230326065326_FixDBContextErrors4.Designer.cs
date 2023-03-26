@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using peer_to_peer_money_transfer.DAL.Context;
 
@@ -11,9 +12,11 @@ using peer_to_peer_money_transfer.DAL.Context;
 namespace peer_to_peer_money_transfer.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230326065326_FixDBContextErrors4")]
+    partial class FixDBContextErrors4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,11 +291,9 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
             modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.ApplicationUserRole", b =>
                 {
                     b.Property<int>("ApplicationUserId")
-                        .HasMaxLength(450)
                         .HasColumnType("int");
 
                     b.Property<int>("ApplicationRoleId")
-                        .HasMaxLength(450)
                         .HasColumnType("int");
 
                     b.Property<string>("RoleId")
