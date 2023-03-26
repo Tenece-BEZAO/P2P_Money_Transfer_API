@@ -1,6 +1,6 @@
-﻿using ToDoList.Data.Interfaces;
+﻿using peer_to_peer_money_transfer.DAL.Interfaces;
 
-namespace ToDoList.Data.Interfaces
+namespace peer_to_peer_money_transfer.DAL.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {

@@ -3,11 +3,13 @@ namespace peer_to_peer_money_transfer.DAL.Entities
 {
     public class Complains
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
-        public int UserId { get; set; }
+        public long UserId { get; set; }
 
-        public int TransationId { get; set; }
+        public long TransationId { get; set; }
+
+        public string ComplainSubject { get; set; } = null!;
 
         public string ComplainDescription { get; set; } = null!;
     }

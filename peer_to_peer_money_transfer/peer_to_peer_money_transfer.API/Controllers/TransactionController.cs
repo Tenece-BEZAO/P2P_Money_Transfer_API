@@ -6,19 +6,37 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using peer_to_peer_money_transfer.BLL.Infrastructure;
+using peer_to_peer_money_transfer.DAL.Dtos.Responses;
+using Microsoft.AspNetCore.Identity;
+using peer_to_peer_money_transfer.DAL.Entities;
+using peer_to_peer_money_transfer.DAL.Interfaces;
+using peer_to_peer_money_transfer.BLL.Interfaces;
+using peer_to_peer_money_transfer.DAL.Dtos.Requests;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace peer_to_peer_money_transfer.API.Controllers
 {
     [Route("CashMingle/[controller]")]
-    public class Transaction : Controller
+    public class TransactionController : Controller
     {
-        // GET: api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly  ITransactionServices _transactionsServices;
+        public TransactionController(ITransactionServices transactionsServices)
         {
-            return new string[] { "value1", "value2" };
+            _transactionsServices = transactionsServices;
+        }
+
+        // GET: api/values
+        [HttpGet("get-transactionHistories-name")]
+        [SwaggerOperation(Summary = "Gets name with AccountNumber")]
+        [SwaggerResponse(StatusCodes.Status200OK, Description = "Gets name with AccountNumber", Type = typeof(SuccessResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
+        public async Task<ActionResult<IEnumerable<TransactionHistoryResponse>>> Get(LoginVerifyRequest loginVerify)
+        {
+            var model = await _transactionsServices.GetTransactionHistoriesAsync(loginVerify);
+
+            return Ok(model);
         }
 
         // GET api/values/5
@@ -29,9 +47,12 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Gets name with AccountNumber", Type = typeof(SuccessResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        public IActionResult GetReceiverName(string AccountNumber)
+        public async Task<ActionResult<ReceiverNameResponse>> GetReceiverName(AccountNumberRequest User)
         {
-            var model = "hey hey";
+            
+
+            ReceiverNameResponse model = await _transactionsServices.GetReceiverNameAsync(User) ;
+            
             return Ok(model);
         }
 

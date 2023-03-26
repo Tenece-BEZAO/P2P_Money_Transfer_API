@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using ToDoList.Data.Interfaces;
+using peer_to_peer_money_transfer.DAL.Interfaces;
 using System.Linq.Expressions;
 
-namespace ToDoList.Data.Implementation
+namespace peer_to_peer_money_transfer.DAL.Implementation
 {
     public class Repository<T> : IRepository<T> where T : class
     {
