@@ -14,6 +14,8 @@ namespace peer_to_peer_money_transfer.DAL.Entities
 
         public TransactionType TransactionType { get; set; } 
 
+        public decimal Amount { get; set; }
+
         public string Description { get; set; } = null!;
     }
 }

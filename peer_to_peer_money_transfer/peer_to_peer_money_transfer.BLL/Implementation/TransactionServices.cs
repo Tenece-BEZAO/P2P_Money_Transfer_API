@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.BLL.Models;
 using peer_to_peer_money_transfer.DAL.Dtos.Requests;
+using peer_to_peer_money_transfer.DAL.Dtos.Responses;
 using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.DAL.Enums;
 using peer_to_peer_money_transfer.DAL.Interfaces;
@@ -19,7 +20,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         //private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public TransactionServices(IServiceFactory serviceFactory, IUnitOfWork unitOfWork)
+        public TransactionServices( IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
             //_serviceFactory = serviceFactory;
@@ -30,12 +31,12 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             _userProfileRepo = _unitOfWork.GetRepository<UserProfile>();
         }
 
-        public Task<bool> FileComplainAsync(ComplainRequest complainRequest, string loginProvider, string providerKey)
+        public Task<bool> FileComplainAsync(ComplainRequest complainRequest)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<(bool successful, decimal Amount)> GetBalanceAsync(AccountNumberRequest AccountNumber)
+        public async Task<(bool successful, decimal amount)> GetBalanceAsync(AccountNumberRequest AccountNumber)
         {
             var User = await _userProfileRepo.GetSingleByAsync(a => a.AccountNumber == AccountNumber.AccountNumber);
 
@@ -45,28 +46,38 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             return (false, 0);
         }
 
-        public async Task<(bool successful, string msg)> GetReceiverNameAsync(AccountNumberRequest AccountNumber)
+        public async Task<ReceiverNameResponse> GetReceiverNameAsync(AccountNumberRequest AccountNumber)
         {
             var User =  await _userProfileRepo.GetSingleByAsync(a => a.AccountNumber == AccountNumber.AccountNumber);
 
             if (User != null)
-                return (true, $"{User.FirstName} {User.MiddleName} {User.LastName}");
+                return new ReceiverNameResponse{            		    
+		        ReceiverFullName = $"{ User.FirstName} {User.MiddleName} {User.LastName}"
+		        };
 
-            return (false, "User Not Found");
+            return null;
             
         }
 
-        public Task<IEnumerable<TransactionHistory>> GetTransactionHistoriesAsync(string loginProvider, string providerKey)
+        public Task<IEnumerable<TransactionHistory>> GetTransactionHistoriesAsync(LoginVerifyRequest loginVerify)
         {
             throw new NotImplementedException();
         }
 
-        public Task<decimal> GetTranscationFee(UserType userType, decimal Amount)
+        public decimal GetTranscationFee(UserType userType, decimal Amount)
         {
-            
+            switch (userType)
+            {
+                case UserType.Corporate:
+                    return CorporateTranscationFees(Amount);
+                default:
+                    return IndiviualTranscationFees(Amount);
+            }
+
+
         }
 
-        private  decimal IndiviualTranscationFees(decimal Amount)
+        private static decimal IndiviualTranscationFees(decimal Amount)
         {
             if (Amount < 1000)
                 return 10;
@@ -97,7 +108,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             return 150;
         }
 
-        private decimal CorporateTranscationFees(decimal Amount)
+        private static decimal CorporateTranscationFees(decimal Amount)
         {
             if (Amount < 1000)
                 return 15;
@@ -144,20 +155,39 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             return 1500;
         }
 
-        public Task<(bool successful, string msg)> SetTransferFeeAsync(TransactionModel transactionModel)
+        public async Task<(bool successful, string msg)> SetTransferFeeAsync(TransactionModel transactionModel)
         {
-            var SendertransactionHistory = new TransactionHistory
+
+
+            decimal Fee = GetTranscationFee(transactionModel.UserType, transactionModel.Amount);
+            var SenderTransactionHistory = new List<TransactionHistory>() { 
+            new TransactionHistory
             {
                 UserId = transactionModel.Sender.Id,
+                TransactionType = TransactionType.Transfer,
+                DateStamp = DateTime.Now,
+                Amount = transactionModel.Amount,
                 Description = $"Sent {transactionModel.Amount} to {transactionModel.Receiver.LastName} {transactionModel.Receiver.FirstName} {transactionModel.Receiver.MiddleName} on {DateTime.Now.ToLongDateString} at {DateTime.Now.ToShortTimeString}"
-            };
+            },
+            new TransactionHistory
+            {
+                UserId = transactionModel.Sender.Id,
+                TransactionType = TransactionType.Transfer,
+                DateStamp = DateTime.Now,
+                Amount = Fee,
+                Description = $"TransactionFee for ₦{transactionModel.Amount} to {transactionModel.Receiver.LastName} {transactionModel.Receiver.FirstName} {transactionModel.Receiver.MiddleName} is ₦{Fee}"
+            }};
+
+            await _transactionHistoryRepo.AddRangeAsync(SenderTransactionHistory);
+            var Check = await _unitOfWork.SaveChangesAsync();
+            return Check > 0 ? (true, $"Task: Transfer was successfully!") : (false, "Transfer failed!");
         }
 
-        public async Task<(bool successful,string msg)> TransferMoneyAsync(TransferRequest transferRequest,string loginProvider, string providerKey)
+        public async Task<(bool successful,string msg)> TransferMoneyAsync(TransferRequest transferRequest)
         {
             var Receiver = await _userProfileRepo.GetSingleByAsync(a => a.AccountNumber == transferRequest.AccountNumber); 
 
-            var User = await _userManager.FindByLoginAsync(loginProvider,providerKey);
+            var User = await _userManager.FindByLoginAsync(transferRequest.Provider, transferRequest.Key);
 
             var Sender = await _userProfileRepo.GetSingleByAsync(a => a.Email == User.Email);
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ToDoList.Data.Interfaces;
+using peer_to_peer_money_transfer.DAL.Interfaces;
 
-namespace ToDoList.Data.Implementation
+namespace peer_to_peer_money_transfer.DAL.Implementation
 {
     public class UnitOfWork<TContext> : IUnitOfWork<DbContext> where TContext : DbContext
     {
