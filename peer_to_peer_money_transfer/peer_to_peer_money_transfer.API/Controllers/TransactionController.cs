@@ -29,10 +29,10 @@ namespace peer_to_peer_money_transfer.API.Controllers
         // GET: api/values
         [HttpGet("get-transactionHistories-name")]
         [SwaggerOperation(Summary = "Gets name with AccountNumber")]
-        [SwaggerResponse(StatusCodes.Status200OK, Description = "Gets name with AccountNumber", Type = typeof(SuccessResponse))]
+        [SwaggerResponse(StatusCodes.Status200OK, Description = "Gets transaction history with AccountNumber", Type = typeof(SuccessResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        public async Task<ActionResult<IEnumerable<TransactionHistoryResponse>>> Get(LoginVerifyRequest loginVerify)
+        public async Task<ActionResult<IEnumerable<TransactionHistoryResponse>>> User_Transaction_History(LoginVerifyRequest loginVerify)
         {
             var model = await _transactionsServices.GetTransactionHistoriesAsync(loginVerify);
 
@@ -47,7 +47,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Gets name with AccountNumber", Type = typeof(SuccessResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        public async Task<ActionResult<ReceiverNameResponse>> GetReceiverName(AccountNumberRequest User)
+        public async Task<ActionResult<ReceiverNameResponse>> Receiver_Name(AccountNumberRequest User)
         {
             
 
@@ -56,10 +56,17 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(model);
         }
 
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [AllowAnonymous]
+        [HttpGet("get-balance-name")]
+        [SwaggerOperation(Summary = "Gets balance with AccountNumber")]
+        [SwaggerResponse(StatusCodes.Status200OK, Description = "Gets name with AccountNumber", Type = typeof(SuccessResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
+        public async Task<ActionResult<Response>> Balance(AccountNumberRequest accountNumber)
         {
-            return "value";
+            Response model = await _transactionsServices.GetBalanceAsync(accountNumber);
+
+            return Ok(model);
         }
 
         // POST api/values
@@ -69,16 +76,20 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [AllowAnonymous]
+        [HttpPut("transfer-money-to-Another-User")]
+        [SwaggerOperation(Summary = "Gets name with AccountNumber")]
+        [SwaggerResponse(StatusCodes.Status200OK, Description = "Performs transfer with AccountNumber", Type = typeof(SuccessResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
+        public async Task<ActionResult<Response>> Transfer(TransferRequest transfer)
         {
+                Response model = await _transactionsServices.TransferMoneyAsync(transfer);
+
+            return Ok(model);
         }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+
     }
 }
 
