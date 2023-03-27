@@ -8,7 +8,7 @@ namespace peer_to_peer_money_transfer.DAL.Entities
     {
         public long Id { get; set; }
 
-        public long UserId { get; set; }
+        public string UserId { get; set; }
 
         public DateTime DateStamp { get; set; }
 
