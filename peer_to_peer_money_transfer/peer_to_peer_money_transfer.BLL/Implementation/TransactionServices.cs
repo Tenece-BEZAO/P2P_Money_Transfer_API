@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.BLL.Models;
@@ -7,6 +8,7 @@ using peer_to_peer_money_transfer.DAL.Dtos.Responses;
 using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.DAL.Enums;
 using peer_to_peer_money_transfer.DAL.Interfaces;
+using peer_to_peer_money_transfer.DAL.Extensions;
 
 namespace peer_to_peer_money_transfer.BLL.Implementation
 {
@@ -17,12 +19,14 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         private readonly IRepository<TransactionHistory> _transactionHistoryRepo;
         private readonly IRepository<Complains> _complainRepo;
         private readonly IRepository<UserProfile> _userProfileRepo;
+        private readonly IHttpContextAccessor _contextAccessor;
         //private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public TransactionServices( IUnitOfWork unitOfWork)
+        public TransactionServices( IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor)
         {
             _unitOfWork = unitOfWork;
+            _contextAccessor = contextAccessor;
             //_serviceFactory = serviceFactory;
             //_mapper = _serviceFactory.GetService<IMapper>();
             //_userManager = _serviceFactory.GetService<UserManager<ApplicationUser>>();
@@ -31,9 +35,26 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             _userProfileRepo = _unitOfWork.GetRepository<UserProfile>();
         }
 
-        public Task<bool> FileComplainAsync(ComplainRequest complainRequest)
+        public async Task<Response> FileComplainAsync(ComplainRequest complainRequest)
         {
-            throw new NotImplementedException();
+            string? _userId = _contextAccessor.HttpContext?.User.GetUserId();
+
+            var User = await _userProfileRepo.GetSingleByAsync(a => a.UserId == _userId);
+
+            if (User == null) throw new InvalidOperationException("Account not found");
+
+            var complain = new Complains
+            {
+                UserId = _userId,
+                TransationId = complainRequest.TransationId,
+                ComplainSubject = complainRequest.ComplainSubject,
+                ComplainDescription = complainRequest.ComplainDescription,
+                Isrevised = false
+            };
+
+            await _complainRepo.AddAsync(complain);
+            var Check = await _unitOfWork.SaveChangesAsync();
+            return Check > 0 ? new Response { success = true, data = $"Task: Complain was Sent" } : throw new InvalidOperationException(" Complain was not Sent!");
         }
 
         public async Task<Response> GetBalanceAsync(AccountNumberRequest AccountNumber)
@@ -59,9 +80,29 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             
         }
 
-        public Task<IEnumerable<TransactionHistory>> GetTransactionHistoriesAsync(LoginVerifyRequest loginVerify)
+        public async Task<TransactionHistoryResponse> GetTransactionHistoriesAsync()
         {
-            throw new NotImplementedException();
+            string? _userId = _contextAccessor.HttpContext?.User.GetUserId();
+
+            var Transactions = await _transactionHistoryRepo.GetByAsync(a => a.UserId == _userId);
+
+            TransactionHistoryResponse transactionreponse = new TransactionHistoryResponse();
+
+            if (Transactions == null) throw new InvalidOperationException("No Transaction found");
+
+            foreach (var transactionHistory in Transactions)
+            {
+                 transactionreponse = new TransactionHistoryResponse
+                {
+                    Date = transactionHistory.DateStamp,
+                    Amount = transactionHistory.Amount,
+                    TransactionType = transactionHistory.TransactionType,
+                    Description = transactionHistory.Description,
+                };
+               
+            }
+
+            return transactionreponse;
         }
 
         public decimal GetTranscationFee(UserType userType, decimal Amount)
@@ -201,9 +242,11 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
 
         public async Task<Response> TransferMoneyAsync(TransferRequest transferRequest)
         {
-            var Receiver = await _userProfileRepo.GetSingleByAsync(a => a.AccountNumber == transferRequest.AccountNumber); 
+            var Receiver = await _userProfileRepo.GetSingleByAsync(a => a.AccountNumber == transferRequest.AccountNumber);
 
-            var User = await _userManager.FindByLoginAsync(transferRequest.Provider, transferRequest.Key);
+            string? _userId = _contextAccessor.HttpContext?.User.GetUserId();
+
+            var User = await _userManager.FindByIdAsync(_userId);
 
             var Sender = await _userProfileRepo.GetSingleByAsync(a => a.Email == User.Email);
 

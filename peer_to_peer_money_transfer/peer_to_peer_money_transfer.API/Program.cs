@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using PayStack.Net;
+using peer_to_peer_money_transfer.BLL.Extensions;
 using peer_to_peer_money_transfer.DAL.Context;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.BLL.Implementation;
@@ -27,6 +29,18 @@ namespace peer_to_peer_money_transfer.API
             string connectionString = builder.Configuration.GetConnectionString("DefaultConn");
             builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(
             builder.Configuration.GetConnectionString("DefaultConn")));
+            builder.Services.AddHttpContextAccessor();// Ben added
+
+            builder.Services.RegisterServices();// Ben added
+
+            builder.Services.AddDatabaseConnection();// Ben added
+
+
+
+
+            //string connectionString = builder.Configuration.GetConnectionString("DefaultConn");
+            //builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(
+            //builder.Configuration.GetConnectionString("DefaultConn")));
             //builder.Services.AddScoped < IPayStackApi,PayStackApi(builder.Configuration.GetSection("ApiSecret")["SecretKey"])>();
             var app = builder.Build();
 
