@@ -13,11 +13,11 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
 
         Task<Response> TransferMoneyAsync(TransferRequest transferRequest);
 
-        Task<bool> FileComplainAsync(ComplainRequest complainRequest);
+        Task<Response> FileComplainAsync(ComplainRequest complainRequest);
 
         Task<Response> SetTransferAsync(TransactionModel transactionModel);
 
-        Task<IEnumerable<TransactionHistory>> GetTransactionHistoriesAsync(LoginVerifyRequest loginVerify);
+        Task<TransactionHistoryResponse> GetTransactionHistoriesAsync();
 
         Task<Response> GetBalanceAsync(AccountNumberRequest AccountNumber);
 

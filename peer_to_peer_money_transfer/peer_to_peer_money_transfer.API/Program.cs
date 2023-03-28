@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PayStack.Net;
+using peer_to_peer_money_transfer.BLL.Extensions;
 using peer_to_peer_money_transfer.DAL.Context;
 
 namespace peer_to_peer_money_transfer.API
@@ -16,10 +17,18 @@ namespace peer_to_peer_money_transfer.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddHttpContextAccessor();// Ben added
 
-            string connectionString = builder.Configuration.GetConnectionString("DefaultConn");
-            builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(
-            builder.Configuration.GetConnectionString("DefaultConn")));
+            builder.Services.RegisterServices();// Ben added
+
+            builder.Services.AddDatabaseConnection();// Ben added
+
+
+
+
+            //string connectionString = builder.Configuration.GetConnectionString("DefaultConn");
+            //builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(
+            //builder.Configuration.GetConnectionString("DefaultConn")));
             //builder.Services.AddScoped < IPayStackApi,PayStackApi(builder.Configuration.GetSection("ApiSecret")["SecretKey"])>();
             var app = builder.Build();
 
