@@ -15,8 +15,8 @@ public static class SqlClientRegistrationExtension
         {
             config = serviceProvider.GetService<IConfiguration>();
         }
-        string cc = config.GetConnectionString("DefaultConnection");
-        services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+        string connectionString = config.GetConnectionString("DefaultConn");
+        services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
 
         services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = false)
        .AddDefaultTokenProviders()
