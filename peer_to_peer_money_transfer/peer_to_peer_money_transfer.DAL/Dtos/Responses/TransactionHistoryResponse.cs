@@ -10,7 +10,7 @@ namespace peer_to_peer_money_transfer.DAL.Dtos.Responses
 
         public decimal Amount { get; set; }
 
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
 
         public string Description { get; set; }
     }

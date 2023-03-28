@@ -32,15 +32,27 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Gets transaction history with AccountNumber", Type = typeof(SuccessResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        public async Task<ActionResult<IEnumerable<TransactionHistoryResponse>>> User_Transaction_History(LoginVerifyRequest loginVerify)
+        public async Task<ActionResult<TransactionHistoryResponse>> User_Transaction_History()
         {
-            var model = await _transactionsServices.GetTransactionHistoriesAsync(loginVerify);
+            TransactionHistoryResponse model = await _transactionsServices.GetTransactionHistoriesAsync();
+
+            return Ok(model);
+        }
+
+        [HttpPost("file-complains")]
+        [SwaggerOperation(Summary = "Sends complains to the db")]
+        [SwaggerResponse(StatusCodes.Status200OK, Description = "Sends complains to the db", Type = typeof(SuccessResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
+        public async Task<ActionResult<Response>> User_Complains(ComplainRequest complain)
+        {
+            var model = await _transactionsServices.FileComplainAsync(complain);
 
             return Ok(model);
         }
 
         // GET api/values/5
- 
+
         [AllowAnonymous]
         [HttpGet("get-receiver-name")]
         [SwaggerOperation(Summary = "Gets name with AccountNumber")]
@@ -70,10 +82,10 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
-        {
-        }
+        //[HttpPost]
+        //public void Post([FromBody]string value)
+        //{
+        //}
 
         // PUT api/values/5
         [AllowAnonymous]
