@@ -340,7 +340,7 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Complains");
+                    b.ToTable("Complains", (string)null);
                 });
 
             modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.TransactionHistory", b =>
@@ -370,7 +370,7 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TransactionHistories");
+                    b.ToTable("TransactionHistories", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
