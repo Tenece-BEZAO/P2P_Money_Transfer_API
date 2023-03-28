@@ -11,15 +11,15 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
     {
         Task<ReceiverNameResponse> GetReceiverNameAsync(AccountNumberRequest AccountNumber);
 
-        Task<(bool successful, string msg)> TransferMoneyAsync(TransferRequest transferRequest);
+        Task<Response> TransferMoneyAsync(TransferRequest transferRequest);
 
-        Task<bool> FileComplainAsync(ComplainRequest complainRequest);
+        Task<Response> FileComplainAsync(ComplainRequest complainRequest);
 
-        Task<(bool successful, string msg)> SetTransferFeeAsync(TransactionModel transactionModel);
+        Task<Response> SetTransferAsync(TransactionModel transactionModel);
 
-        Task<IEnumerable<TransactionHistory>> GetTransactionHistoriesAsync(LoginVerifyRequest loginVerify);
+        Task<TransactionHistoryResponse> GetTransactionHistoriesAsync();
 
-        Task<(bool successful, decimal amount)> GetBalanceAsync(AccountNumberRequest AccountNumber);
+        Task<Response> GetBalanceAsync(AccountNumberRequest AccountNumber);
 
         decimal GetTranscationFee(UserType userType, decimal Amount);
 

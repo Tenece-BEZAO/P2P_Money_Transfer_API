@@ -1,15 +1,20 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+using peer_to_peer_money_transfer.DAL.Extensions;
+
 
 namespace peer_to_peer_money_transfer.DAL.Dtos.Requests
 {
     public class LoginVerifyRequest
     {
-        [Required]
-        public string Provider { get; set; }
-        [Required]
-        public string Key{ get; set; }
-        [Required]
+        private readonly IHttpContextAccessor _contextAccessor;
+        public LoginVerifyRequest(IHttpContextAccessor contextAccessor)
+        {
+            _contextAccessor = contextAccessor;
+            _userId = _contextAccessor.HttpContext?.User.GetUserId();
+        }
+        public string? _userId { get; }
         public string AccountNumber { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+
 using peer_to_peer_money_transfer.DAL.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,15 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using peer_to_peer_money_transfer.Shared.Interfaces;
 using peer_to_peer_money_transfer.Shared.JwtConfigurations;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
+using PayStack.Net;
+using peer_to_peer_money_transfer.BLL.Extensions;
+//using peer_to_peer_money_transfer.DAL.Context;
+using peer_to_peer_money_transfer.BLL.Interfaces;
+using peer_to_peer_money_transfer.BLL.Implementation;
+using peer_to_peer_money_transfer.DAL.Interfaces;
+using peer_to_peer_money_transfer.DAL.Implementation;
 
 namespace peer_to_peer_money_transfer.API
 {
@@ -20,7 +30,7 @@ namespace peer_to_peer_money_transfer.API
             // Add services to the container.
             var jwtValues = builder.Configuration.GetSection("Jwt");
 
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConn") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
             //var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings");
 
@@ -36,7 +46,17 @@ namespace peer_to_peer_money_transfer.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
             builder.Services.AddAuthorization();
+
+            builder.Services.AddScoped<IFundingService, FundingService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDBContext>>();
+            builder.Services.AddAutoMapper(Assembly.Load("peer_to_peer_money_transfer.DAL"));
+            builder.Services.AddHttpContextAccessor();// Ben added
+
+            builder.Services.RegisterServices();// Ben added
+
+            builder.Services.AddDatabaseConnection();// Ben added
 
             //builder.Services.AddScoped < IPayStackApi,PayStackApi(builder.Configuration.GetSection("ApiSecret")["SecretKey"])>();
 
