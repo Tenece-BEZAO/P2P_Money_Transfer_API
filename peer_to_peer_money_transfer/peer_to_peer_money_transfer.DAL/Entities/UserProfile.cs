@@ -25,7 +25,7 @@ namespace peer_to_peer_money_transfer.DAL.Entities
 
         public JobType JobType { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }  
 
         [ForeignKey(nameof(UserId))]
         public virtual ApplicationUser User { get; set; }
