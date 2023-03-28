@@ -39,6 +39,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
 
             }
             
+            
 
            
             throw new NotImplementedException();
@@ -46,7 +47,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
 
         public TransactionInitializeResponse MakePayment(DepositRequest depositRequest)
         {
-             string secret = (string)_configuration.GetSection("ApiSecret").GetSection("SecretKey").Value;
+            string secret = (string)_configuration.GetSection("ApiSecret").GetSection("SecretKey").Value;
             PayStackApi payStack = new(secret);
             TransactionInitializeRequest initializeRequest = _mapper.Map<TransactionInitializeRequest>(depositRequest);
            var result = payStack.Transactions.Initialize(initializeRequest);
