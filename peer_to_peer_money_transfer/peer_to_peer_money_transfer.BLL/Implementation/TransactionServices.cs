@@ -18,7 +18,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         //private readonly IServiceFactory _serviceFactory;
         private readonly IRepository<TransactionHistory> _transactionHistoryRepo;
         private readonly IRepository<Complains> _complainRepo;
-        private readonly IRepository<UserProfile> _userProfileRepo;
+        private readonly IRepository<ApplicationUser> _userProfileRepo;
         private readonly IHttpContextAccessor _contextAccessor;
         //private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -32,14 +32,14 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             //_userManager = _serviceFactory.GetService<UserManager<ApplicationUser>>();
             _transactionHistoryRepo = _unitOfWork.GetRepository<TransactionHistory>();
             _complainRepo = _unitOfWork.GetRepository<Complains>();
-            _userProfileRepo = _unitOfWork.GetRepository<UserProfile>();
+            _userProfileRepo = _unitOfWork.GetRepository<ApplicationUser>();
         }
 
         public async Task<Response> FileComplainAsync(ComplainRequest complainRequest)
         {
             string? _userId = _contextAccessor.HttpContext?.User.GetUserId();
 
-            var User = await _userProfileRepo.GetSingleByAsync(a => a.UserId == _userId);
+            var User = await _userProfileRepo.GetSingleByAsync(a => a.Id == _userId);
 
             if (User == null) throw new InvalidOperationException("Account not found");
 
@@ -246,9 +246,9 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
 
             string? _userId = _contextAccessor.HttpContext?.User.GetUserId();
 
-            var User = await _userManager.FindByIdAsync(_userId);
+            //var User = await _userManager.FindByIdAsync(_userId);
 
-            var Sender = await _userProfileRepo.GetSingleByAsync(a => a.Email == User.Email);
+            var Sender = await _userProfileRepo.GetSingleByAsync(a => a.Id == _userId);
 
             
 
@@ -269,11 +269,11 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             {
                 throw new InvalidOperationException("Invalid Amount"); 
 	        }
-            if (User.UserTypeId == UserType.Indiviual && transferRequest.Amount > ((decimal)TransactionLimit.Indiviual) )
+            if (Sender.UserTypeId == UserType.Indiviual && transferRequest.Amount > ((decimal)TransactionLimit.Indiviual) )
             {
                 throw new InvalidOperationException("Amount over Limit");
 	        }
-            if (User.UserTypeId == UserType.Corporate && transferRequest.Amount > ((decimal)TransactionLimit.Corporate))
+            if (Sender.UserTypeId == UserType.Corporate && transferRequest.Amount > ((decimal)TransactionLimit.Corporate))
             {
                 throw new InvalidOperationException("Amount over Limit");
             }
