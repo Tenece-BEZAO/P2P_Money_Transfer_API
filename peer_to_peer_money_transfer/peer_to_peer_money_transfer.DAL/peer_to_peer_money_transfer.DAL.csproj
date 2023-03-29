@@ -14,6 +14,7 @@
     <None Remove="Extensions\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Configuration\" />
     <Folder Include="Enums\" />
     <Folder Include="Dtos\Responses\" />
     <Folder Include="Extensions\" />
@@ -27,7 +28,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-	  <PackageReference Include="AutoMapper" Version="12.0.1" />
 	    <PackageReference Include="PayStack.Net" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
