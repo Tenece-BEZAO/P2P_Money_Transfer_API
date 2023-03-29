@@ -15,21 +15,19 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
     public class TransactionServices : ITransactionServices
     {
         private readonly IUnitOfWork _unitOfWork;
-        //private readonly IServiceFactory _serviceFactory;
+       
         private readonly IRepository<TransactionHistory> _transactionHistoryRepo;
         private readonly IRepository<Complains> _complainRepo;
         private readonly IRepository<ApplicationUser> _userProfileRepo;
         private readonly IHttpContextAccessor _contextAccessor;
-        //private readonly IMapper _mapper;
+      
         private readonly UserManager<ApplicationUser> _userManager;
 
         public TransactionServices( IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor)
         {
             _unitOfWork = unitOfWork;
             _contextAccessor = contextAccessor;
-            //_serviceFactory = serviceFactory;
-            //_mapper = _serviceFactory.GetService<IMapper>();
-            //_userManager = _serviceFactory.GetService<UserManager<ApplicationUser>>();
+          
             _transactionHistoryRepo = _unitOfWork.GetRepository<TransactionHistory>();
             _complainRepo = _unitOfWork.GetRepository<Complains>();
             _userProfileRepo = _unitOfWork.GetRepository<ApplicationUser>();
@@ -287,7 +285,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
 
             Response TransactionCheck = await SetTransferAsync(transactionModel);
 
-            return new Response {success = TransactionCheck.success,data = TransactionCheck.data };            
+            return new Response {Success = TransactionCheck.Success,Data = TransactionCheck.data };            
         }
     }
 }
