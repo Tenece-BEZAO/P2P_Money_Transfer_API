@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using peer_to_peer_money_transfer.DAL.Context;
 
@@ -11,9 +12,11 @@ using peer_to_peer_money_transfer.DAL.Context;
 namespace peer_to_peer_money_transfer.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230329154902_AddedAccountBalance")]
+    partial class AddedAccountBalance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,7 +179,7 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("Birthday")
                         .HasColumnType("datetime2");

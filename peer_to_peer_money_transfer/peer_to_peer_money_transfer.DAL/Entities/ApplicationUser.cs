@@ -8,6 +8,9 @@ namespace peer_to_peer_money_transfer.DAL.Entities
     {
         public string FirstName { get; set; }
         public string? MiddleName { get; set; }
+        public string AccountNumber { get; set; } = null!;
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Balance { get; set; } = 0;
         public string LastName { get; set; }
         public string? RecoveryMail { get; set; }
         public DateTime? Birthday { get; set; }
