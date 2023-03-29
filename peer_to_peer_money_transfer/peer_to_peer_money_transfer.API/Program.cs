@@ -39,8 +39,8 @@ namespace peer_to_peer_money_transfer.API
 
             /*builder.Services.Configure<JwtConfig>(Key);*/
 
-            builder.Services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<ApplicationDBContext>()
-                    .AddDefaultTokenProviders();
+            /*builder.Services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<ApplicationDBContext>()
+                    .AddDefaultTokenProviders();*/
               
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -60,7 +60,7 @@ namespace peer_to_peer_money_transfer.API
 
             //builder.Services.AddScoped < IPayStackApi,PayStackApi(builder.Configuration.GetSection("ApiSecret")["SecretKey"])>();
 
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             //builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
             builder.Services.AddScoped<IJwtConfig, JwtConfig>();
