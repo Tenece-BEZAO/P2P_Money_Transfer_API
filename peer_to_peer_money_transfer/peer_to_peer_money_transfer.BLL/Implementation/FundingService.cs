@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using peer_to_peer_money_transfer;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 
@@ -34,7 +35,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             {
 
             }
-            if (!user.Active)
+            if (!user.Activated)
             {
 
             }
