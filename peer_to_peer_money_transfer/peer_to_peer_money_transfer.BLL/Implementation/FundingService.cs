@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using peer_to_peer_money_transfer;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 
 using PayStack.Net;
@@ -27,23 +23,30 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             _unitOfWork = unitOfWork;
             _userRepoService = _unitOfWork.GetRepository<ApplicationUser>();
         }
-        public async Task FundAccount(DepositRequest depositRequest)
+        public async Task<string> FundAccount(DepositRequest depositRequest,string reference)
         {
 
            var  user = await _userRepoService.GetByIdAsync(depositRequest.CurrentUserId);
             if (user == null)
             {
-
+                throw new InvalidOperationException("User Not Found");
             }
             if (!user.Activated)
             {
-
+                throw new InvalidOperationException("User has been deactivated");
             }
-            
-            
-
-           
-            throw new NotImplementedException();
+            if (!user.Verified)
+            {
+                throw new InvalidOperationException("Account Not Verifed, Verify account to continue");
+            }
+            if (!VerifyPayment(reference))
+            {
+                throw new InvalidOperationException("Payment Wasn't successful");
+            }
+            var amount = depositRequest.AmountInKobo / 100 - depositRequest.TransactionCharge;
+            user.Balance += amount;
+            await _unitOfWork.SaveChangesAsync();
+            return $"Account funded with {amount} Account balance";
         }
 
         public TransactionInitializeResponse MakePayment(DepositRequest depositRequest)
@@ -51,18 +54,19 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             string secret = (string)_configuration.GetSection("ApiSecret").GetSection("SecretKey").Value;
             PayStackApi payStack = new(secret);
             TransactionInitializeRequest initializeRequest = _mapper.Map<TransactionInitializeRequest>(depositRequest);
-           var result = payStack.Transactions.Initialize(initializeRequest);
+            var result = payStack.Transactions.Initialize(initializeRequest);
             return result;
         }
 
-        public Task<bool> ValidateWallet(string accountNumber)
-        {
-            throw new NotImplementedException();
-        }
+       
 
-        public Task<bool> VerifyPayment()
+        public bool VerifyPayment(string referenceCode)
         {
-            throw new NotImplementedException();
+            string secret = (string)_configuration.GetSection("ApiSecret").GetSection("SecretKey").Value;
+            PayStackApi payStack = new(secret);
+            TransactionVerifyResponse result = payStack.Transactions.Verify(referenceCode);
+            return result.Status;
+          
         }
     }
 }

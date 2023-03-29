@@ -10,10 +10,10 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
 {
     public interface IFundingService
     {
-        Task<bool> ValidateWallet(string accountNumber);
+  
         TransactionInitializeResponse MakePayment(DepositRequest depositRequest);
-        Task<bool> VerifyPayment();
-        Task FundAccount(DepositRequest depositRequest);
+        bool VerifyPayment(string referenceCode);
+        Task<string> FundAccount(DepositRequest depositRequest, string reference);
 
     }
 }
