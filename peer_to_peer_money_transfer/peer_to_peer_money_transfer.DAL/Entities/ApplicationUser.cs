@@ -14,7 +14,6 @@ namespace peer_to_peer_money_transfer.DAL.Entities
         public UserType UserTypeId { get; set; }
 
         public string? BusinessName { get; set; }
-        public string? UserName { get; set; }
 
         public string? NIN { get; set; }
 
