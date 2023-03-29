@@ -13,7 +13,6 @@ namespace peer_to_peer_money_transfer.Shared.JwtConfigurations
     public class JwtConfig : IJwtConfig
     {
         private ApplicationUser _user;
-
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
 
@@ -35,7 +34,7 @@ namespace peer_to_peer_money_transfer.Shared.JwtConfigurations
         private SigningCredentials GetSignInCredentials()
         {
             //var Key = Environment.GetEnvironmentVariable("Key");
-            var Key = _configuration.GetSection("Key").Value;
+            var Key = _configuration.GetSection("Jwt:Key").Value;
             var encodeKey = Encoding.UTF8.GetBytes(Key);
             var signInCredential = new SymmetricSecurityKey(encodeKey);
 
@@ -68,8 +67,8 @@ namespace peer_to_peer_money_transfer.Shared.JwtConfigurations
         {
             /*var issuer = Environment.GetEnvironmentVariable("Issuer");
             var lifetime = Environment.GetEnvironmentVariable("Lifetime");*/
-            var issuer = _configuration.GetSection("Issuer").Value;
-            var lifetime = _configuration.GetSection("Lifetime").Value;
+            var issuer = _configuration.GetSection("Jwt:Issuer").Value;
+            var lifetime = _configuration.GetSection("Jwt:Lifetime").Value;
             var expires = DateTime.Now.AddMinutes(Convert.ToDouble(lifetime));
 
             var token = new JwtSecurityToken(
