@@ -49,8 +49,7 @@ namespace peer_to_peer_money_transfer.API
 
             builder.Services.AddAuthorization();
 
-            builder.Services.AddScoped<IFundingService, FundingService>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDBContext>>();
+           
             builder.Services.AddAutoMapper(Assembly.Load("peer_to_peer_money_transfer.DAL"));
             builder.Services.AddHttpContextAccessor();// Ben added
 
