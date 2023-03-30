@@ -14,11 +14,17 @@ namespace peer_to_peer_money_transfer.DAL.Context
         {
         }
 
+        public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
         public virtual DbSet<Complains> Complains { get; set; }
        
         public virtual DbSet<TransactionHistory> TransactionHistories { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
+
+            /*builder.ApplyConfiguration(new RoleConfiguration());*/
+
             /*modelBuilder.Entity<ApplicationRoleClaim>()
                 .HasOne(r => r.Role)
                 .WithMany()
@@ -31,8 +37,8 @@ namespace peer_to_peer_money_transfer.DAL.Context
                 b.HasKey(u => u.Id);
 
                 // Indexes for "normalized" username and email, to allow efficient lookups
-                b.HasIndex(u => u.NormalizedUserName).HasName("UserNameIndex").IsUnique();
-                b.HasIndex(u => u.NormalizedEmail).HasName("EmailIndex");
+                b.HasIndex(u => u.NormalizedUserName).HasDatabaseName("UserNameIndex").IsUnique();
+                b.HasIndex(u => u.NormalizedEmail).HasDatabaseName("EmailIndex");
 
                 // Maps to the AspNetUsers table
                 b.ToTable("AspNetUsers");
@@ -104,7 +110,7 @@ namespace peer_to_peer_money_transfer.DAL.Context
                 b.HasKey(r => r.Id);
 
                 // Index for "normalized" role name to allow efficient lookups
-                b.HasIndex(r => r.NormalizedName).HasName("RoleNameIndex").IsUnique();
+                b.HasIndex(r => r.NormalizedName).HasDatabaseName("RoleNameIndex").IsUnique();
 
                 // Maps to the AspNetRoles table
                 b.ToTable("AspNetRoles");
@@ -163,6 +169,5 @@ namespace peer_to_peer_money_transfer.DAL.Context
             });
 
         }
-
     }
 }

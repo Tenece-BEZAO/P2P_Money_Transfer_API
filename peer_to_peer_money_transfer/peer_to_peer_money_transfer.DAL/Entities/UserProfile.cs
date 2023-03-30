@@ -19,13 +19,17 @@ namespace peer_to_peer_money_transfer.DAL.Entities
 
         public string? MiddleName { get; set; }
 
-        public ProfileName ProfileName { get; set; }
+        public string? BusinessName { get; set; }
+        public string? UserName { get; set; }
 
-        public DocumentType DocumentType{ get; set; } 
+        public string? NIN{ get; set; }
+        public string? CAC { get; set; }
 
-        public JobType JobType { get; set; }
+        public string? BusinessType { get; set; }
 
-        public DateTime DateOfBirth { get; set; }
+        public string? Profession { get; set; }
+
+        public DateTime DateOfBirth { get; set; }  
 
         [ForeignKey(nameof(UserId))]
         public virtual ApplicationUser User { get; set; }

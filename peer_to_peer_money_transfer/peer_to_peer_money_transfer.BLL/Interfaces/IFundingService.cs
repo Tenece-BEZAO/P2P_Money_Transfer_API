@@ -1,4 +1,7 @@
-﻿using System;
+﻿using PayStack.Net;
+using peer_to_peer_money_transfer.DAL.Dtos.Requests;
+using peer_to_peer_money_transfer.DAL.Dtos.Responses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +11,10 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
 {
     public interface IFundingService
     {
-        Task<bool> ValidateWallet(string accountNumber);
-        Task<bool> MakePayment();
-        Task<bool> VerifyPayment();
-        Task FundAccount();
+  
+        TransactionInitializeResponse MakePayment(DepositRequest depositRequest);
+        TransactionVerifyResponse VerifyPayment(string referenceCode);
+        Task<Response> FundAccount(string currentUserId, string reference);
 
     }
 }
