@@ -1,5 +1,6 @@
 ﻿using PayStack.Net;
 using peer_to_peer_money_transfer.DAL.Dtos.Requests;
+using peer_to_peer_money_transfer.DAL.Dtos.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
     {
   
         TransactionInitializeResponse MakePayment(DepositRequest depositRequest);
-        bool VerifyPayment(string referenceCode);
-        Task<string> FundAccount(DepositRequest depositRequest, string reference);
+        TransactionVerifyResponse VerifyPayment(string referenceCode);
+        Task<Response> FundAccount(string currentUserId, string reference);
 
     }
 }
