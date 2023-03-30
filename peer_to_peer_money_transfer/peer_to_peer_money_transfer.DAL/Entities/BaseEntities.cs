@@ -27,10 +27,11 @@ namespace peer_to_peer_money_transfer.DAL.Entities
 
         [NotMapped]
         public bool Lien { get; set; } = false;
-    
-        public TransactionHistory? transactionHistory { get; set; } 
 
-        public Complains? Complains { get; set; } 
+      
+        public TransactionHistory TransactionHistory { get; set; } 
+
+        public Complains Complains { get; set; } 
     }
 }
 
