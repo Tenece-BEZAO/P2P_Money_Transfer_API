@@ -1,9 +1,10 @@
-﻿using peer_to_peer_money_transfer.DAL.Enums;
+﻿using peer_to_peer_money_transfer.DAL.DataTransferObject;
+using peer_to_peer_money_transfer.DAL.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace peer_to_peer_money_transfer.DAL.DataTransferObject
+namespace peer_to_peer_money_transfer.Shared.DataTransferObject
 {
-    public class RegisterDTO : LoginDTO
+    public class RegisterAdminDTO : LoginDTO
     {
         [Required(ErrorMessage = "First Name is Required")]
         public string FirstName { get; set; } = null!;
@@ -26,5 +27,6 @@ namespace peer_to_peer_money_transfer.DAL.DataTransferObject
         [Required(ErrorMessage = "Account Type is Required")]
         [Display(Name = "Account Type")]
         public UserType AccountType { get; set; }
+
     }
 }

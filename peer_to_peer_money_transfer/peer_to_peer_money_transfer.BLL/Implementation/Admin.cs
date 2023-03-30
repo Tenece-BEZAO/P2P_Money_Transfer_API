@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using AutoMapper.Execution;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.JsonPatch;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.DAL.Interfaces;
@@ -27,18 +26,26 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         {
             return await _userRepoService.GetAllAsync();
         }
-        public async Task<GetCharacterDTO> GetAllCustomers()
+
+        public async Task<IEnumerable<GetCharacterDTO>> GetAllCustomers()
         {
             var allUser = await _userRepoService.GetAllAsync();
-            var select = _mapper.Map<GetCharacterDTO>(allUser);
+
+            var select = _mapper.Map<IEnumerable<GetCharacterDTO>>(allUser);
 
             return select;
         }
 
-        public async Task<bool> GetCustomerByName(string name)
+        public async Task<ApplicationUser> GetCustomerByUserNameAll(string userName)
         {
-            throw new NotImplementedException();
-            //return await _userRepoService.GetByAsync(name);
+            return await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
+        }
+
+        public async Task<GetCharacterDTO> GetCustomerByUserName(string userName)
+        {
+            var user = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
+            var select = _mapper.Map<GetCharacterDTO>(user);
+            return select;
         }
 
         public async Task<ApplicationUser> GetCustomerByAccountNumber(long number)
@@ -49,32 +56,41 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         public async Task<TransactionHistory> GetTransactionById(long Id)
         {
             return await _transactionHistoryRepo.GetByIdAsync(Id);
-
         }
 
-        public async Task<ApplicationUser> EditCustomerDetails(ApplicationUser user)
+        public async Task<ApplicationUser> EditCustomerDetails(string userName, JsonPatchDocument<ApplicationUser> user)
         {
-            return await _userRepoService.UpdateAsync(user);
+            var update = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
+
+            user.ApplyTo(update);
+
+            return await _userRepoService.UpdateAsync(update);
         }
 
-        public async Task<bool> RegisterAdmin()
+        public async Task<ApplicationUser> DeactivateCustomer(string userName, JsonPatchDocument<ApplicationUser> user)
         {
-            throw new NotImplementedException();
+            var deActivate = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
+            user.ApplyTo(deActivate);
+
+            return await _userRepoService.UpdateAsync(deActivate);
         }
 
-        public async Task<bool> DeactivateCustomer()
+        public async Task<ApplicationUser> Delete(string userName, JsonPatchDocument<ApplicationUser> user)
         {
-            throw new NotImplementedException();
-        }
+            var delete = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
 
-        public async Task<ApplicationUser> Delete(ApplicationUser user)
-        {
-            return await _userRepoService.UpdateAsync(user);
+            var result = user.Replace(x => x.FirstName, "JOHN");
 
+            result.ApplyTo(delete);
+
+            return await _userRepoService.UpdateAsync(delete);
         }
-        public async Task DeleteCustomer(long Id)
+        public async Task<ApplicationUser> DeleteCustomer(string userName)
         {
-           await _userRepoService.DeleteByIdAsync(Id);
+            var delete = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
+
+            await _userRepoService.DeleteByIdAsync(delete.Id);
+            return null;
         }
     }
 }

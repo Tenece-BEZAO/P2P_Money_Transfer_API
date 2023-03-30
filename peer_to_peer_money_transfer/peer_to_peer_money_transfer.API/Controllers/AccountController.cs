@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using peer_to_peer_money_transfer.DAL.DataTransferObject;
 using peer_to_peer_money_transfer.DAL.Entities;
+using peer_to_peer_money_transfer.Shared.DataTransferObject;
 using peer_to_peer_money_transfer.Shared.Interfaces;
 
 namespace peer_to_peer_money_transfer.API.Controllers
@@ -26,9 +27,46 @@ namespace peer_to_peer_money_transfer.API.Controllers
             _jwtConfig = jwtConfig;
         }
 
-        [HttpPost]
-        [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDTO register)
+        [HttpPost("register/admin")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminDTO admin)
+        {
+            _logger.LogInformation($"Registration Attempt for {admin.Email}");
+
+            var userExists = await _userManager.FindByEmailAsync(admin.Email);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (userExists != null)
+            {
+                return BadRequest("Email Already Exist");
+            }
+
+            try
+            {
+
+                var user = _mapper.Map<ApplicationUser>(admin);
+                user.Active = true;
+                var result = await _userManager.CreateAsync(user, user.PasswordHash);
+
+                if (!result.Succeeded)
+                {
+                    return BadRequest("User Registration Failed");
+                }
+
+                return Accepted(new { Token = await _jwtConfig.GenerateJwtToken() });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Something went wrong in the {nameof(RegisterAdmin)}");
+                return Problem($"Something went wrong in the {nameof(RegisterAdmin)}", statusCode: 500);
+            }
+        }
+
+        [HttpPost("register/individual")]
+        public async Task<IActionResult> RegisterIndividual([FromBody] RegisterIndividualDTO register)
         {
             _logger.LogInformation($"Registration Attempt for {register.Email}");
 
@@ -46,7 +84,9 @@ namespace peer_to_peer_money_transfer.API.Controllers
 
             try
             {
+                
                 var user = _mapper.Map<ApplicationUser>(register);
+                user.Active = true;
                 var result = await _userManager.CreateAsync(user, user.PasswordHash);
 
                 if (!result.Succeeded)
@@ -54,18 +94,54 @@ namespace peer_to_peer_money_transfer.API.Controllers
                     return BadRequest("User Registration Failed");
                 }
 
-                //var token = _jwtConfig.GenerateJwtToken(user);
-                return Accepted();
+                return Accepted(new { Token = await _jwtConfig.GenerateJwtToken() });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Something went wrong in the {nameof(Register)}");
-                return Problem($"Something went wrong in the {nameof(Register)}", statusCode: 500);
+                _logger.LogError(ex, $"Something went wrong in the {nameof(RegisterIndividual)}");
+                return Problem($"Something went wrong in the {nameof(RegisterIndividual)}", statusCode: 500);
             }
         }
 
-        [HttpPost]
-        [Route("login")]
+        [HttpPost("register/business")]
+        public async Task<IActionResult> RegisterBusiness([FromBody] RegisterBusinessDTO business)
+        {
+            _logger.LogInformation($"Registration Attempt for {business.Email}");
+
+            var userExists = await _userManager.FindByEmailAsync(business.Email);
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (userExists != null)
+            {
+                return BadRequest("Email Already Exist");
+            }
+
+            try
+            {
+
+                var user = _mapper.Map<ApplicationUser>(business);
+                user.Active = true;
+                var result = await _userManager.CreateAsync(user, user.PasswordHash);
+
+                if (!result.Succeeded)
+                {
+                    return BadRequest("User Registration Failed");
+                }
+
+                return Accepted(new { Token = await _jwtConfig.GenerateJwtToken() });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Something went wrong in the {nameof(RegisterBusiness)}");
+                return Problem($"Something went wrong in the {nameof(RegisterBusiness)}", statusCode: 500);
+            }
+        }
+
+        [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginDTO login)
         {
