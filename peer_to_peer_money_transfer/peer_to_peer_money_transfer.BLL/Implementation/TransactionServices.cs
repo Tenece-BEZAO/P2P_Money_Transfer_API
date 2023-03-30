@@ -52,7 +52,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
 
             await _complainRepo.AddAsync(complain);
             var Check = await _unitOfWork.SaveChangesAsync();
-            return Check > 0 ? new Response { success = true, data = $"Task: Complain was Sent" } : throw new InvalidOperationException(" Complain was not Sent!");
+            return Check > 0 ? new Response { Success = true, Data = $"Task: Complain was Sent" } : throw new InvalidOperationException(" Complain was not Sent!");
         }
 
         public async Task<Response> GetBalanceAsync(AccountNumberRequest AccountNumber)
@@ -60,7 +60,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             var User = await _userProfileRepo.GetSingleByAsync(a => a.AccountNumber == AccountNumber.AccountNumber);
 
             if (User != null)
-                return new Response { success = true, data = User.Balance };
+                return new Response { Success = true, Data = User.Balance };
 
             throw new InvalidOperationException("Account not found");
         }
@@ -235,7 +235,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
 
             await _transactionHistoryRepo.AddRangeAsync(TransactionHistory);
             var Check = await _unitOfWork.SaveChangesAsync();
-            return Check > 0 ? new Response { success = true,data = $"Task: Transfer was successfully!" } : throw new InvalidOperationException("Transfer failed!");
+            return Check > 0 ? new Response {Success = true, Data = $"Task: Transfer was successfully!" } : throw new InvalidOperationException("Transfer failed!");
         }
 
         public async Task<Response> TransferMoneyAsync(TransferRequest transferRequest)

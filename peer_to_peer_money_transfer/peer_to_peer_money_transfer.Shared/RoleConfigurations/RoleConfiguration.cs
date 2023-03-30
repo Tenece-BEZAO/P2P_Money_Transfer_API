@@ -18,7 +18,12 @@ namespace peer_to_peer_money_transfer.Shared.RoleConfigurations
                 {
                     Name = "Administrator",
                     NormalizedName = "ADMINISTRATOR"
-                }
+                },
+                  new IdentityRole
+                  {
+                      Name = "SuperAdministrator",
+                      NormalizedName = "SUPERADMINISTRATOR"
+                  }
             );
         }
     }}

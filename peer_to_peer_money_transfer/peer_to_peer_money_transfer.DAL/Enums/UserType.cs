@@ -5,6 +5,7 @@ public enum UserType
     Indiviual = 1,
     Corporate,
     Admin,
+    SuperAdmin
 }
 
 public static class UserTypeExtension
@@ -16,6 +17,7 @@ public static class UserTypeExtension
             UserType.Indiviual => "Indiviual",
             UserType.Corporate => "Corporate",
             UserType.Admin => "Admin",
+            UserType.SuperAdmin => "SuperAdmin",
             _ => null
         };
     }
