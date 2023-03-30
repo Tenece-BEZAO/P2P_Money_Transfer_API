@@ -55,7 +55,7 @@ namespace peer_to_peer_money_transfer.API
 
             builder.Services.RegisterServices();// Ben added
 
-            builder.Services.AddDatabaseConnection();// Ben added
+            //builder.Services.AddDatabaseConnection();// Ben added
 
             //builder.Services.AddScoped < IPayStackApi,PayStackApi(builder.Configuration.GetSection("ApiSecret")["SecretKey"])>();
 
@@ -63,6 +63,7 @@ namespace peer_to_peer_money_transfer.API
             //builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
             builder.Services.AddScoped<IJwtConfig, JwtConfig>();
+            builder.Services.AddScoped<IAdmin, Admin>();
 
             builder.Services.AddAuthentication(options =>
              {
@@ -96,7 +97,7 @@ namespace peer_to_peer_money_transfer.API
             {
                 opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = @"JWT Authorization header using the bearer scheme
+                    Description = @"JWT Authorization header using the bearer scheme.
                                     Please Enter 'Bearer' [space] and then your token
                                     Example: Bearer 123456",
                     Name = "Authorization",

@@ -1,19 +1,28 @@
-﻿namespace peer_to_peer_money_transfer.BLL.Interfaces
+﻿using peer_to_peer_money_transfer.DAL.Entities;
+using peer_to_peer_money_transfer.Shared.DataTransferObject;
+
+namespace peer_to_peer_money_transfer.BLL.Interfaces
 {
-    internal interface IAdmin
+    public interface IAdmin
     {
-        Task<bool> GetAllCustomers();
+        Task<IEnumerable<ApplicationUser>> GetAll();
+
+        Task<GetCharacterDTO> GetAllCustomers();
 
         Task<bool> GetCustomerByName(string name);
 
-        Task<bool> GetCustomerByAccountNumber(long number);
+        Task<ApplicationUser> GetCustomerByAccountNumber(long number);
 
-        Task<bool> GetTransactionById(long number);
+        Task<TransactionHistory> GetTransactionById(long Id);
 
-        Task<bool> EditCustomerDetails();
+        Task<bool> RegisterAdmin();
 
-        Task<bool> DeleteCustomer(string name); //implement soft delete
+        Task<ApplicationUser> EditCustomerDetails(ApplicationUser user);
 
-        Task <bool> RegisterAdmin();
+        Task<bool> DeactivateCustomer();
+
+        Task<ApplicationUser> Delete(ApplicationUser user); //implement soft delete
+
+        Task DeleteCustomer(long Id); //implement soft delete
     }
 }

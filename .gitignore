@@ -361,3 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+peer_to_peer_money_transfer/peer_to_peer_money_transfer.API/appsettings.json

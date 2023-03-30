@@ -17,7 +17,9 @@ namespace peer_to_peer_money_transfer.BLL.Extensions
         {
            
             services.AddTransient<IUnitOfWork, UnitOfWork<ApplicationDBContext>>();
+            //services.AddTransient<IServiceFactory, ServiceFactory>();
           
+            //services.AddTransient<Interfaces.IAuthenticationService, Implementation.AuthenticationService>();
             services.AddTransient<ITransactionServices, TransactionServices>();
            
             services.AddScoped<IFundingService, FundingService>();
