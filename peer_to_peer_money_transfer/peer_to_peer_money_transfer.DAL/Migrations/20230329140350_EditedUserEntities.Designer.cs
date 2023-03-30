@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using peer_to_peer_money_transfer.DAL.Context;
 
@@ -11,9 +12,11 @@ using peer_to_peer_money_transfer.DAL.Context;
 namespace peer_to_peer_money_transfer.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230329140350_EditedUserEntities")]
+    partial class EditedUserEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,10 +163,6 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("AccountNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("Activated")
                         .HasColumnType("bit");
 
@@ -174,9 +173,6 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                     b.Property<string>("BVN")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,4)");
 
                     b.Property<DateTime?>("Birthday")
                         .HasColumnType("datetime2");
