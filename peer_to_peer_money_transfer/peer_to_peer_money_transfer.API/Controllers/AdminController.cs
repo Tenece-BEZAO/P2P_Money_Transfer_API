@@ -30,19 +30,19 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [HttpGet("GetCustomerByName")]
         public async Task<IActionResult> GetCustomerByName(string name)
         {
-            return Ok(_admin.GetCustomerByName(name));
+            return Ok(await _admin.GetCustomerByName(name));
         }
 
         [HttpGet("GetCustomerByAccountNumber")]
         public async Task<IActionResult> GetCustomerByAccountNumber(long id)
         {
-            return Ok(_admin.GetCustomerByAccountNumber(id));
+            return Ok(await _admin.GetCustomerByAccountNumber(id));
         }
 
         [HttpGet("GetTransactionById")]
         public async Task<IActionResult> GetTransactionById(long id)
         {
-            return Ok(_admin.GetTransactionById(id));
+            return Ok(await _admin.GetTransactionById(id));
         }
 
         [HttpPost("RegisterAdmin")]
@@ -54,7 +54,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [HttpPut("EditCustomerDetails")]
         public async Task<IActionResult> EditCustomerDetails(ApplicationUser user)
         {
-            return Ok(_admin.EditCustomerDetails(user));
+            return Ok(await _admin.EditCustomerDetails(user));
         }
 
         [HttpPut("DeactivateCustomer")]
@@ -66,7 +66,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [HttpDelete("DeleteCustomer")]
         public async Task<IActionResult> Delete(ApplicationUser user)
         {
-            return Ok(_admin.Delete(user));
+            return Ok(await _admin.Delete(user));
         }
 
         [HttpDelete("Delete/DeleteCustomer")]

@@ -39,11 +39,6 @@ namespace peer_to_peer_money_transfer.BLL.Infrastructure
            
 
         }
-
-        
-
-
-       
     }
 }
 
