@@ -7,7 +7,8 @@ using peer_to_peer_money_transfer.BLL.Implementation;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 
 using Microsoft.AspNetCore.Identity;
-
+using peer_to_peer_money_transfer.Shared.Interfaces;
+using peer_to_peer_money_transfer.Shared.JwtConfigurations;
 
 namespace peer_to_peer_money_transfer.BLL.Extensions
 {
@@ -17,9 +18,6 @@ namespace peer_to_peer_money_transfer.BLL.Extensions
         {
            
             services.AddTransient<IUnitOfWork, UnitOfWork<ApplicationDBContext>>();
-            //services.AddTransient<IServiceFactory, ServiceFactory>();
-          
-            //services.AddTransient<Interfaces.IAuthenticationService, Implementation.AuthenticationService>();
             services.AddTransient<ITransactionServices, TransactionServices>();
            
             services.AddScoped<IFundingService, FundingService>();

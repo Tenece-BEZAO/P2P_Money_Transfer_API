@@ -48,7 +48,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             {
 
                 var user = _mapper.Map<ApplicationUser>(admin);
-                user.Active = true;
+                user.Activated = true;
                 var result = await _userManager.CreateAsync(user, user.PasswordHash);
 
                 if (!result.Succeeded)
@@ -86,7 +86,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             {
                 
                 var user = _mapper.Map<ApplicationUser>(register);
-                user.Active = true;
+                user.Activated = true;
                 var result = await _userManager.CreateAsync(user, user.PasswordHash);
 
                 if (!result.Succeeded)
@@ -124,7 +124,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             {
 
                 var user = _mapper.Map<ApplicationUser>(business);
-                user.Active = true;
+                user.Activated = true;
                 var result = await _userManager.CreateAsync(user, user.PasswordHash);
 
                 if (!result.Succeeded)

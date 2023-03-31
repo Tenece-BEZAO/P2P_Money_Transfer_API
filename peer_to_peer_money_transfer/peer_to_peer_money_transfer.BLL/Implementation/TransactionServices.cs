@@ -209,7 +209,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             var TransactionHistory = new List<TransactionHistory>() { 
             new TransactionHistory
             {
-                UserId = transactionModel.Sender.UserId,
+                UserId = transactionModel.Sender.Id,
                 TransactionType = TransactionType.Debit,
                 DateStamp = DateTime.Now,
                 Amount = transactionModel.Amount,
@@ -217,7 +217,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             },
             new TransactionHistory
             {
-                UserId = transactionModel.Sender.UserId,
+                UserId = transactionModel.Sender.Id,
                 TransactionType = TransactionType.Debit,
                 DateStamp = DateTime.Now,
                 Amount = Fee,
@@ -225,7 +225,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             },
 	         new TransactionHistory
              { 
-                 UserId = transactionModel.Receiver.UserId,
+                 UserId = transactionModel.Receiver.Id,
                  TransactionType = TransactionType.Credit,
                  DateStamp = DateTime.Now,
                  Amount = transactionModel.Amount,
@@ -254,7 +254,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             {
                 throw new InvalidOperationException("User Not Found"); 
 	        }
-            if(Sender.Password != transferRequest.SenderPassword)
+            if(Sender.PasswordHash != transferRequest.SenderPassword)
             {
                 throw new InvalidOperationException("Password Incorrect"); 
 	        }
@@ -285,7 +285,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
 
             Response TransactionCheck = await SetTransferAsync(transactionModel);
 
-            return new Response {Success = TransactionCheck.Success,Data = TransactionCheck.data };            
+            return new Response {Success = TransactionCheck.Success,Data = TransactionCheck.Data };            
         }
     }
 }
