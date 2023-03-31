@@ -1,4 +1,5 @@
-﻿using peer_to_peer_money_transfer.DAL.Entities;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.Shared.DataTransferObject;
 
 namespace peer_to_peer_money_transfer.BLL.Interfaces
@@ -7,22 +8,22 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
     {
         Task<IEnumerable<ApplicationUser>> GetAll();
 
-        Task<GetCharacterDTO> GetAllCustomers();
+        Task<IEnumerable<GetCharacterDTO>> GetAllCustomers();
 
-        Task<bool> GetCustomerByName(string name);
+        Task<GetCharacterDTO> GetCustomerByUserName(string userName);
+
+        Task<ApplicationUser> GetCustomerByUserNameAll(string userName);
 
         Task<ApplicationUser> GetCustomerByAccountNumber(long number);
 
         Task<TransactionHistory> GetTransactionById(long Id);
 
-        Task<bool> RegisterAdmin();
+        Task<ApplicationUser> EditCustomerDetails(string userName, JsonPatchDocument<ApplicationUser> user);
 
-        Task<ApplicationUser> EditCustomerDetails(ApplicationUser user);
+        Task<ApplicationUser> DeactivateCustomer(string userName, JsonPatchDocument<ApplicationUser> user);
 
-        Task<bool> DeactivateCustomer();
+        Task<ApplicationUser> Delete(string userName, JsonPatchDocument<ApplicationUser> user); //soft delete
 
-        Task<ApplicationUser> Delete(ApplicationUser user); //implement soft delete
-
-        Task DeleteCustomer(long Id); //implement soft delete
+        Task<ApplicationUser> DeleteCustomer(string userName); //hard delete
     }
 }
