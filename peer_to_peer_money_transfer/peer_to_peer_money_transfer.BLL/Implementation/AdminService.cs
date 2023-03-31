@@ -2,9 +2,12 @@
 using AutoMapper.Execution;
 using Microsoft.EntityFrameworkCore;
 using peer_to_peer_money_transfer.BLL.Interfaces;
+using peer_to_peer_money_transfer.DAL.Dtos.Requests;
 using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.DAL.Interfaces;
 using peer_to_peer_money_transfer.Shared.DataTransferObject;
+using peer_to_peer_money_transfer.DAL.Dtos.Responses;
+using Microsoft.VisualBasic;
 
 namespace peer_to_peer_money_transfer.BLL.Implementation
 {
@@ -35,7 +38,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             return select;
         }
 
-        public async Task<bool> GetCustomerByName(string name)
+        public async Task<ResponseStatus> GetCustomerByName(string name)
         {
             throw new NotImplementedException();
             //return await _userRepoService.GetByAsync(name);
@@ -57,24 +60,33 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             return await _userRepoService.UpdateAsync(user);
         }
 
-        public async Task<bool> RegisterAdmin()
+        public async Task<ResponseStatus> RegisterAdmin()
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> DeactivateCustomer()
+        public async Task<ResponseStatus> DeactivateCustomer(AccountNumberRequest accountNumber)
         {
-            throw new NotImplementedException();
+            var User = await _userRepoService.GetSingleByAsync(a => a.AccountNumber == accountNumber.AccountNumber);
+            if(User == null)  return new ResponseStatus { Success = false, Data = "Account not Deactivated" };
+            User.Activated = false;
+            await _userRepoService.UpdateAsync(User);
+            return new ResponseStatus { Success =true , Data = "Account Deactivated" };
         }
 
-        public async Task<ApplicationUser> Delete(ApplicationUser user)
+        public async Task<ResponseStatus> Delete(AccountNumberRequest accountNumber)
         {
-            return await _userRepoService.UpdateAsync(user);
+            var User = await _userRepoService.GetSingleByAsync(a => a.AccountNumber == accountNumber.AccountNumber);
+            if (User == null) return new ResponseStatus { Success = false, Data = "Account not Deactivated" };
+
+            User.Deleted = true;
+
+            return new ResponseStatus { Success = true, Data =  "Soft Delete successful"};
 
         }
-        public async Task DeleteCustomer(long Id)
+        public async Task DeleteCustomer(AccountNumberRequest accountNumber)
         {
-           await _userRepoService.DeleteByIdAsync(Id);
+           await _userRepoService.DeleteAsync(a => a.AccountNumber == accountNumber.AccountNumber);
         }
     }
 }

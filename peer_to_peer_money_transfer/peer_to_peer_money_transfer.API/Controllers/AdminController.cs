@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using peer_to_peer_money_transfer.BLL.Interfaces;
+using peer_to_peer_money_transfer.DAL.Dtos.Requests;
 using peer_to_peer_money_transfer.DAL.Entities;
+using Response = peer_to_peer_money_transfer.DAL.Dtos.Responses.ResponseStatus;
+ 
 
 namespace peer_to_peer_money_transfer.API.Controllers
 {
@@ -58,21 +61,21 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         [HttpPut("DeactivateCustomer")]
-        public async Task<IActionResult> DeactivateCustomer(long number)
+        public async Task<IActionResult> DeactivateCustomer(AccountNumberRequest accountNumber)
         {
-            return Ok();
+            return Ok(await _admin.DeactivateCustomer( accountNumber));
         }
 
         [HttpDelete("DeleteCustomer")]
-        public async Task<IActionResult> Delete(ApplicationUser user)
+        public async Task<IActionResult> Delete(AccountNumberRequest accountNumber)
         {
-            return Ok(await _admin.Delete(user));
+            return Ok(await _admin.Delete(accountNumber));
         }
 
         [HttpDelete("Delete/DeleteCustomer")]
-        public async Task<IActionResult> DeleteCustomer(long id)
+        public async Task<IActionResult> DeleteCustomer(AccountNumberRequest accountNumber)
         {
-            return Ok(_admin.DeleteCustomer(id));
+            return Ok(_admin.DeleteCustomer(accountNumber));
         }
     }
 }

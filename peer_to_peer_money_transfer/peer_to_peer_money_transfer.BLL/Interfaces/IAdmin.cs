@@ -1,5 +1,8 @@
-﻿using peer_to_peer_money_transfer.DAL.Entities;
+﻿using peer_to_peer_money_transfer.DAL.Dtos.Requests;
+using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.Shared.DataTransferObject;
+using peer_to_peer_money_transfer.DAL.Dtos.Responses;
+
 
 namespace peer_to_peer_money_transfer.BLL.Interfaces
 {
@@ -9,20 +12,20 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
 
         Task<GetCharacterDTO> GetAllCustomers();
 
-        Task<bool> GetCustomerByName(string name);
+        Task<ResponseStatus> GetCustomerByName(string name);
 
         Task<ApplicationUser> GetCustomerByAccountNumber(long number);
 
         Task<TransactionHistory> GetTransactionById(long Id);
 
-        Task<bool> RegisterAdmin();
+        Task<ResponseStatus> RegisterAdmin();
 
         Task<ApplicationUser> EditCustomerDetails(ApplicationUser user);
 
-        Task<bool> DeactivateCustomer();
+        Task<ResponseStatus> DeactivateCustomer(AccountNumberRequest accountNumber);
 
-        Task<ApplicationUser> Delete(ApplicationUser user); //implement soft delete
+        Task<ResponseStatus> Delete(AccountNumberRequest accountNumber); //implement soft delete
 
-        Task DeleteCustomer(long Id); //implement soft delete
+        Task DeleteCustomer(AccountNumberRequest accountNumber); //implement hard delete
     }
 }

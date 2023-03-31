@@ -12,6 +12,7 @@ using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.DAL.Interfaces;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.DAL.Dtos.Requests;
+using Response = peer_to_peer_money_transfer.DAL.Dtos.Responses.ResponseStatus;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
