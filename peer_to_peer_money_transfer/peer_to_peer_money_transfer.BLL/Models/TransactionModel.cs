@@ -6,9 +6,9 @@ namespace peer_to_peer_money_transfer.BLL.Models
 {
     public class TransactionModel
     {
-        public UserProfile Receiver { get; set; }
+        public ApplicationUser Receiver { get; set; }
 
-        public UserProfile Sender { get; set; }
+        public ApplicationUser Sender { get; set; }
 
         public UserType UserType { get; set; }
 

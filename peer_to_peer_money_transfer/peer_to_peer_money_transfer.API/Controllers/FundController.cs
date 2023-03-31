@@ -30,7 +30,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
         public async Task<ActionResult<TransactionInitializeResponse>> Deposit(DepositRequest depositRequest)
         {
-            var response = _fundingService.MakePayment(depositRequest);
+            var response =  _fundingService.MakePayment(depositRequest);
             return Ok(response);
         }
 
