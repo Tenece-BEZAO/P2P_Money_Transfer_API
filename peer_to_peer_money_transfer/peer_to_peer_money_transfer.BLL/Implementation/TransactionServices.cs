@@ -26,8 +26,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         public TransactionServices( IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor)
         {
             _unitOfWork = unitOfWork;
-            _contextAccessor = contextAccessor;
-          
+            _contextAccessor = contextAccessor;          
             _transactionHistoryRepo = _unitOfWork.GetRepository<TransactionHistory>();
             _complainRepo = _unitOfWork.GetRepository<Complains>();
             _userProfileRepo = _unitOfWork.GetRepository<ApplicationUser>();

@@ -30,17 +30,7 @@ namespace peer_to_peer_money_transfer.API
             // Add services to the container.
             var jwtValues = builder.Configuration.GetSection("Jwt");
 
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConn") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
-            //var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings");
-
-            builder.Services.AddDbContext<ApplicationDBContext>(options =>
-                options.UseSqlServer(connectionString));
-
-            /*builder.Services.Configure<JwtConfig>(Key);*/
-
-            /*builder.Services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<ApplicationDBContext>()
-                    .AddDefaultTokenProviders();*/
+           
               
             builder.Services.AddControllers().AddNewtonsoftJson();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -55,15 +45,11 @@ namespace peer_to_peer_money_transfer.API
 
             builder.Services.RegisterServices();// Ben added
 
-            //builder.Services.AddDatabaseConnection();// Ben added
+            builder.Services.AddDatabaseConnection();// Ben added
 
-            //builder.Services.AddScoped < IPayStackApi,PayStackApi(builder.Configuration.GetSection("ApiSecret")["SecretKey"])>();
+           
 
-            //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            //builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
-            builder.Services.AddScoped<IJwtConfig, JwtConfig>();
-            builder.Services.AddScoped<IAdmin, Admin>();
+            
 
             builder.Services.AddAuthentication(options =>
              {
@@ -73,8 +59,7 @@ namespace peer_to_peer_money_transfer.API
              })
                  .AddJwtBearer(jwt =>
                  {
-                     /*var key = Environment.GetEnvironmentVariable("Key");
-                       var issuer = Environment.GetEnvironmentVariable("Issuer");*/
+                     
                      var key = jwtValues.GetSection("Key").Value;
                      var issuer = jwtValues.GetSection("Issuer").Value;
                      var encodeKey = Encoding.UTF8.GetBytes(key);
