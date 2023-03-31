@@ -7,6 +7,7 @@ using peer_to_peer_money_transfer.DAL.Dtos.Requests;
 using peer_to_peer_money_transfer.DAL.Dtos.Responses;
 using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.DAL.Interfaces;
+using Response = peer_to_peer_money_transfer.DAL.Dtos.Responses.ResponseStatus;
 
 namespace peer_to_peer_money_transfer.BLL.Implementation
 {

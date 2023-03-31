@@ -1,13 +1,9 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.JsonPatch;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
 using peer_to_peer_money_transfer.BLL.Interfaces;
-using peer_to_peer_money_transfer.DAL.DataTransferObject;
+using peer_to_peer_money_transfer.DAL.Dtos.Requests;
 using peer_to_peer_money_transfer.DAL.Entities;
-using peer_to_peer_money_transfer.Shared.Interfaces;
-using peer_to_peer_money_transfer.Shared.JwtConfigurations;
+using Response = peer_to_peer_money_transfer.DAL.Dtos.Responses.ResponseStatus;
+ 
 
 namespace peer_to_peer_money_transfer.API.Controllers
 {
@@ -16,18 +12,10 @@ namespace peer_to_peer_money_transfer.API.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdmin _admin;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMapper _mapper;
-        private readonly ILogger _logger;
-        private readonly IJwtConfig _jwtConfig;
 
-        public AdminController(IAdmin admin, UserManager<ApplicationUser> userManager, IMapper mapper, ILogger<AccountController> logger, IJwtConfig jwtConfig)
+        public AdminController(IAdmin admin)
         {
             _admin = admin;
-            _userManager = userManager;
-            _mapper = mapper;
-            _logger = logger;
-            _jwtConfig = jwtConfig;
         }
 
         [HttpGet("GetAll")]
@@ -42,18 +30,10 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(await _admin.GetAllCustomers());
         }
 
-        [HttpGet("GetCustomerByUserName")]
-        public async Task<IActionResult> GetCustomerByUserName(string userName)
+        [HttpGet("GetCustomerByName")]
+        public async Task<IActionResult> GetCustomerByName(string name)
         {
-
-            return Ok(await _admin.GetCustomerByUserName(userName));
-        }
-
-        [HttpGet("GetCustomerByUserNameAll")]
-        public async Task<IActionResult> GetCustomerByUserNameAll(string userName)
-        {
-            return Ok(await _admin.GetCustomerByUserNameAll(userName));
-
+            return Ok(await _admin.GetCustomerByName(name));
         }
 
         [HttpGet("GetCustomerByAccountNumber")]
@@ -62,39 +42,40 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(await _admin.GetCustomerByAccountNumber(id));
         }
 
-        [HttpGet("getTransactionById")]
+        [HttpGet("GetTransactionById")]
         public async Task<IActionResult> GetTransactionById(long id)
         {
             return Ok(await _admin.GetTransactionById(id));
         }
 
-
-        [HttpPatch("editCustomerDetails/{userName}")]
-        public async Task<IActionResult> EditCustomerDetails(string userName, [FromBody] JsonPatchDocument<ApplicationUser> user)
+        [HttpPost("RegisterAdmin")]
+        public async Task<IActionResult> RegisterAdmin()
         {
-
-            return Ok(await _admin.EditCustomerDetails(userName, user));
-
+            return Ok();
         }
 
-        [HttpPatch("deactivateCustomer/{userName}")]
-        public async Task<IActionResult> DeactivateCustomer(string userName, [FromBody] JsonPatchDocument<ApplicationUser> user)
+        [HttpPut("EditCustomerDetails")]
+        public async Task<IActionResult> EditCustomerDetails(ApplicationUser user)
         {
-            return Ok(await _admin.DeactivateCustomer(userName, user));
+            return Ok(await _admin.EditCustomerDetails(user));
         }
 
-        [HttpPatch("deleteCustomer/{userName}")]
-        public async Task<IActionResult> Delete(string userName, JsonPatchDocument<ApplicationUser> user)
+        [HttpPut("DeactivateCustomer")]
+        public async Task<IActionResult> DeactivateCustomer(AccountNumberRequest accountNumber)
         {
-
-            return Ok(await _admin.Delete(userName, user));
-
+            return Ok(await _admin.DeactivateCustomer( accountNumber));
         }
 
-        [HttpDelete("delete/deleteCustomer/{userName}")]
-        public async Task<IActionResult> DeleteCustomer(string userName)
+        [HttpDelete("DeleteCustomer")]
+        public async Task<IActionResult> Delete(AccountNumberRequest accountNumber)
         {
-            return Ok(await _admin.DeleteCustomer(userName));
+            return Ok(await _admin.Delete(accountNumber));
+        }
+
+        [HttpDelete("Delete/DeleteCustomer")]
+        public async Task<IActionResult> DeleteCustomer(AccountNumberRequest accountNumber)
+        {
+            return Ok(_admin.DeleteCustomer(accountNumber));
         }
     }
 }

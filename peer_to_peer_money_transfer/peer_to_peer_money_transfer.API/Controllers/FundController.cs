@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Response = peer_to_peer_money_transfer.DAL.Dtos.Responses.ResponseStatus;
 
 using Microsoft.AspNetCore.Mvc;
 using PayStack.Net;
