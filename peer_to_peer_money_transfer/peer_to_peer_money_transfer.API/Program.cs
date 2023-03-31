@@ -17,7 +17,7 @@ using peer_to_peer_money_transfer.BLL.Extensions;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.BLL.Implementation;
 using peer_to_peer_money_transfer.DAL.Interfaces;
-using peer_to_peer_money_transfer.DAL.Implementation;
+using peer_to_peer_money_transfer.DAL.Implementation; 
 
 namespace peer_to_peer_money_transfer.API
 {
@@ -32,7 +32,7 @@ namespace peer_to_peer_money_transfer.API
 
            
               
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddNewtonsoftJson();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
