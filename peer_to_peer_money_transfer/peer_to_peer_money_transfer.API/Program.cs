@@ -40,7 +40,7 @@ namespace peer_to_peer_money_transfer.API
             builder.Services.AddAuthorization();
 
            
-            builder.Services.AddAutoMapper(Assembly.Load("peer_to_peer_money_transfer.DAL"));
+            builder.Services.AddAutoMapper(Assembly.Load("peer_to_peer_money_transfer.Shared"));
             builder.Services.AddHttpContextAccessor();// Ben added
 
             builder.Services.RegisterServices();// Ben added

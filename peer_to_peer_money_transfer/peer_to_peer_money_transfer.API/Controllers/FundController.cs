@@ -22,7 +22,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             _fundingService = fundingService;
             _contextAccessor = contextAccessor;
         }
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("make-deposit")]
         [SwaggerOperation(Summary = "Funds account using paystack")]
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Funding successful", Type = typeof(SuccessResponse))]
@@ -34,7 +34,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(response);
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("verify-payment")]
         [SwaggerOperation(Summary = "Verifying deposits using paystack")]
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Verification successful", Type = typeof(SuccessResponse))]
