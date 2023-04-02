@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using peer_to_peer_money_transfer.BLL.Infrastructure;
 using peer_to_peer_money_transfer.DAL.DataTransferObject;
 using peer_to_peer_money_transfer.DAL.Entities;
+using peer_to_peer_money_transfer.DAL.Interfaces;
 using peer_to_peer_money_transfer.Shared.DataTransferObject;
 using peer_to_peer_money_transfer.Shared.Interfaces;
 
@@ -17,14 +19,17 @@ namespace peer_to_peer_money_transfer.API.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
         private readonly IJwtConfig _jwtConfig;
+        private readonly IUnitOfWork _unitOfWork;
 
         public AccountController(UserManager<ApplicationUser> userManager, IMapper mapper,
-                               ILogger<AccountController> logger, IJwtConfig jwtConfig)
+                               ILogger<AccountController> logger, IJwtConfig jwtConfig,IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _mapper = mapper;
             _logger = logger;
             _jwtConfig = jwtConfig;
+            _unitOfWork = unitOfWork;
+            
         }
 
         [HttpPost("register/admin")]
@@ -56,7 +61,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
                     return BadRequest("User Registration Failed");
                 }
 
-                return Accepted(new { Token = await _jwtConfig.GenerateJwtToken() });
+                return Accepted(new { Token = await _jwtConfig.GenerateJwtToken(user) });
             }
             catch (Exception ex)
             {
@@ -71,6 +76,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             _logger.LogInformation($"Registration Attempt for {register.Email}");
 
             var userExists = await _userManager.FindByEmailAsync(register.Email);
+            var passwordGenerator = new GenerateAccountNumber(_unitOfWork);
 
             if (!ModelState.IsValid)
             {
@@ -87,6 +93,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
                 
                 var user = _mapper.Map<ApplicationUser>(register);
                 user.Activated = true;
+                user.AccountNumber = await passwordGenerator.GenerateAccount();
                 var result = await _userManager.CreateAsync(user, user.PasswordHash);
 
                 if (!result.Succeeded)
@@ -94,7 +101,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
                     return BadRequest("User Registration Failed");
                 }
 
-                return Accepted(new { Token = await _jwtConfig.GenerateJwtToken() });
+                return Accepted(new { Token = await _jwtConfig.GenerateJwtToken(user) });
             }
             catch (Exception ex)
             {
@@ -132,7 +139,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
                     return BadRequest("User Registration Failed");
                 }
 
-                return Accepted(new { Token = await _jwtConfig.GenerateJwtToken() });
+                return Accepted(new { Token = await _jwtConfig.GenerateJwtToken(user) });
             }
             catch (Exception ex)
             {
@@ -146,7 +153,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDTO login)
         {
             _logger.LogInformation($"Login Attempt for {login.UserName}");
-
+           
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -158,8 +165,12 @@ namespace peer_to_peer_money_transfer.API.Controllers
                 {
                     return Unauthorized();
                 }
-
-                return Accepted(new { Token = await _jwtConfig.GenerateJwtToken() });
+               var user = _userManager.Users.FirstOrDefault(x => x.UserName.ToLower() == login.UserName.ToLower());
+                if (user==null)
+                {
+                    throw new InvalidOperationException("User Not Found");
+                }
+                return Accepted(new { Token = await _jwtConfig.GenerateJwtToken(user) });
             }
             catch (Exception ex)
             {

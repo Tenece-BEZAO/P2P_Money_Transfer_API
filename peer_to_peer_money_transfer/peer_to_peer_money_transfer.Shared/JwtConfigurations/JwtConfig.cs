@@ -22,10 +22,10 @@ namespace peer_to_peer_money_transfer.Shared.JwtConfigurations
             _configuration = configuration;
         }
 
-        public async Task<string> GenerateJwtToken()
+        public async Task<string> GenerateJwtToken(ApplicationUser user)
         {
             var signInCredentials = GetSignInCredentials();
-            var claims = await GetClaims();
+            var claims = await GetClaims(user);
             var jwtToken = GenerateToken(signInCredentials, claims);
 
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
@@ -42,18 +42,19 @@ namespace peer_to_peer_money_transfer.Shared.JwtConfigurations
 
         }
 
-        private async Task<List<Claim>> GetClaims()
+        private async Task<List<Claim>> GetClaims(ApplicationUser user)
         {
             // Create some claims for the token
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Name, _user.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, _user.Email),
+                new Claim(JwtRegisteredClaimNames.Name, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()),
             };
 
-            var roles = await _userManager.GetRolesAsync(_user);
+
+            var roles = await _userManager.GetRolesAsync(user);
 
             foreach (var role in roles)
             {

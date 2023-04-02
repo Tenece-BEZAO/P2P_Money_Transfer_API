@@ -34,16 +34,17 @@ namespace peer_to_peer_money_transfer.DAL.Entities
         
         public bool Activated { get; set; } = false;
 
-        public bool Deleted { get; set; }
+        public bool Deleted { get; set; } = false;
         
         public bool Lien { get; set; } = false;
-        public Complains Complains { get; set; }
+
+        public virtual ICollection<Complains>? Complains { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
-        public TransactionHistory TransactionHistory { get; set; }
-        public virtual ICollection<ApplicationUserClaim> Claims { get; set; }
-        public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
-        public virtual ICollection<IdentityUserToken<string>> Tokens { get; set; }
-        public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
+        public virtual ICollection<TransactionHistory>? TransactionHistory { get; set; }
+        public virtual ICollection<ApplicationUserClaim>? Claims { get; set; }
+        public virtual ICollection<IdentityUserLogin<string>>? Logins { get; set; }
+        public virtual ICollection<IdentityUserToken<string>>? Tokens { get; set; }
+        public virtual ICollection<ApplicationUserRole>? UserRoles { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using peer_to_peer_money_transfer.DAL.Interfaces;
 
 namespace peer_to_peer_money_transfer.BLL.Infrastructure
 {
-    public class GenerateAccountNumber
+    public  class GenerateAccountNumber
     {
         private readonly IRepository<ApplicationUser> _userRepo;
         private readonly IUnitOfWork _unitOfWork;
@@ -16,7 +16,7 @@ namespace peer_to_peer_money_transfer.BLL.Infrastructure
             _userRepo = _unitOfWork.GetRepository<ApplicationUser>();
         }
         
-        public async Task<string> GenerateAccount()
+        public  async Task<string> GenerateAccount()
         {
             start:
             const string Number = "37";

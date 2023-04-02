@@ -15,7 +15,7 @@ namespace peer_to_peer_money_transfer.DAL.Dtos.Requests
         [Required]
         public string Reference { get; set; }
 
-        [JsonProperty("amount")]
+       
         [Required]
         public int AmountInKobo { get; set; }
         [Required]
@@ -23,16 +23,17 @@ namespace peer_to_peer_money_transfer.DAL.Dtos.Requests
 
         public string Plan { get; set; }
 
-        [JsonProperty("callback_url")]
+       
+
         public string CallbackUrl { get; set; }
 
-        [JsonProperty("subaccount")]
+    
         public string SubAccount { get; set; }
         [Required]
-        [JsonProperty("transaction_charge")]
+      
         public int TransactionCharge { get; set; }
 
-        [JsonProperty("currency")]
+      
         public string Currency { get; set; } = "NGN";
 
         public string Bearer { get; set; }
