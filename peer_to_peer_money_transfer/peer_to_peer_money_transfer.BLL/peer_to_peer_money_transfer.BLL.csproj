@@ -7,7 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\peer_to_peer_money_transfer.Shared\peer_to_peer_money_transfer.Shared.csproj" />
     <ProjectReference Include="..\peer_to_peer_money_transfer.DAL\peer_to_peer_money_transfer.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="PayStack.Net" Version="1.1.0" />
+  <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Models\" />
+    <None Remove="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Extensions\" />
+  </ItemGroup>
 </Project>

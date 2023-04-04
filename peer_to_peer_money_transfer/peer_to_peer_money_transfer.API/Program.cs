@@ -1,3 +1,24 @@
+
+using peer_to_peer_money_transfer.DAL.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using peer_to_peer_money_transfer.DAL.Entities;
+using System.Text;
+using Microsoft.OpenApi.Models;
+using peer_to_peer_money_transfer.Shared.Interfaces;
+using peer_to_peer_money_transfer.Shared.JwtConfigurations;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
+using PayStack.Net;
+using peer_to_peer_money_transfer.BLL.Extensions;
+//using peer_to_peer_money_transfer.DAL.Context;
+using peer_to_peer_money_transfer.BLL.Interfaces;
+using peer_to_peer_money_transfer.BLL.Implementation;
+using peer_to_peer_money_transfer.DAL.Interfaces;
+using peer_to_peer_money_transfer.DAL.Implementation; 
+
 namespace peer_to_peer_money_transfer.API
 {
     public class Program
@@ -7,11 +28,90 @@ namespace peer_to_peer_money_transfer.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            var jwtValues = builder.Configuration.GetSection("Jwt");
 
-            builder.Services.AddControllers();
+           
+              
+            builder.Services.AddControllers().AddNewtonsoftJson();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddAuthorization();
+
+           
+            builder.Services.AddAutoMapper(Assembly.Load("peer_to_peer_money_transfer.Shared"));
+            builder.Services.AddHttpContextAccessor();// Ben added
+
+            builder.Services.RegisterServices();// Ben added
+
+            builder.Services.AddDatabaseConnection();// Ben added
+
+           
+
+            
+
+            builder.Services.AddAuthentication(options =>
+             {
+                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+             })
+                 .AddJwtBearer(jwt =>
+                 {
+                     
+                     var key = jwtValues.GetSection("Key").Value;
+                     var issuer = jwtValues.GetSection("Issuer").Value;
+                     var encodeKey = Encoding.UTF8.GetBytes(key);
+
+                     jwt.SaveToken = true;
+                     jwt.TokenValidationParameters = new TokenValidationParameters()
+                     {
+                         ValidateIssuer = true,
+                         ValidateIssuerSigningKey = true,
+                         ValidateLifetime = true,
+                         ValidIssuer = issuer,
+                         IssuerSigningKey = new SymmetricSecurityKey(encodeKey),
+                         ValidateAudience = false, //dev env
+                         RequireExpirationTime = true,
+                         
+                     };   
+                 });
+
+            builder.Services.AddSwaggerGen(opt =>
+            {
+                opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header using the bearer scheme.
+                                    Please Enter 'Bearer' [space] and then your token
+                                    Example: Bearer 123456",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT"
+                });
+
+                opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "Oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },
+                        new string[]{}
+                    }
+                });
+
+                opt.SwaggerDoc("v1", new OpenApiInfo { Title = "CashMingle", Version = "v1" });
+            });
 
             var app = builder.Build();
 
@@ -24,8 +124,9 @@ namespace peer_to_peer_money_transfer.API
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
+            app.UseAuthorization();
 
             app.MapControllers();
 
