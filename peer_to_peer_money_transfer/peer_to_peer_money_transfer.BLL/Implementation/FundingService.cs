@@ -34,7 +34,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             {
 
             }
-            if (!user.Active)
+            if (!user.Activated)
             {
 
             }

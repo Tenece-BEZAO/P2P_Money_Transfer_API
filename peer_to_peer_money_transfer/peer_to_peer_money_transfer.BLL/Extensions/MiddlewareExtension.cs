@@ -1,13 +1,15 @@
 ﻿using peer_to_peer_money_transfer.DAL.Context;
 using peer_to_peer_money_transfer.DAL.Interfaces;
 using peer_to_peer_money_transfer.DAL.Implementation;
-//using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using peer_to_peer_money_transfer.BLL.Implementation;
 using peer_to_peer_money_transfer.BLL.Interfaces;
-//using peer_to_peer_money_transfer.BLL.Infrastructure.jwt;
 using Microsoft.AspNetCore.Identity;
-
+using peer_to_peer_money_transfer.DAL.Entities;
+using peer_to_peer_money_transfer.Shared.Interfaces;
+using peer_to_peer_money_transfer.Shared.JwtConfigurations;
+using peer_to_peer_money_transfer.Shared.EmailConfiguration;
+using peer_to_peer_money_transfer.Shared.SmsConfiguration;
 
 namespace peer_to_peer_money_transfer.BLL.Extensions
 {
@@ -15,16 +17,14 @@ namespace peer_to_peer_money_transfer.BLL.Extensions
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            //services.AddTransient<IJWTAuthenticator, JwtAuthenticator>();
-            //services.AddTransient<IAuthorizationHandler, CustomAuthorizationHandler>();
             services.AddTransient<IUnitOfWork, UnitOfWork<ApplicationDBContext>>();
-            //services.AddTransient<IServiceFactory, ServiceFactory>();
-            //services.AddTransient<ITriangleService, TriangleService>();
-            //services.AddTransient<IEmailService, EmailService>();
-            //services.AddTransient<Interfaces.IAuthenticationService, Implementation.AuthenticationService>();
             services.AddTransient<ITransactionServices, TransactionServices>();
-            //services.AddTransient<IStaffService, StaffService>();
-            //services.AddTransient<IToDoItemService, ToDoItemService>();
+            services.AddScoped<UserManager<ApplicationUser>>();
+            services.AddScoped<IAdmin, Admin>();
+            services.AddScoped<IJwtConfig, JwtConfig>();
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddTransient<ISendSms, SendSms>();
+            services.AddScoped<IFundingService, FundingService>();
         }
     }
 }

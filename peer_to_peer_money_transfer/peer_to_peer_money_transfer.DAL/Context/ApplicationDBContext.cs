@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace peer_to_peer_money_transfer.DAL.Context
 {
@@ -22,6 +23,7 @@ namespace peer_to_peer_money_transfer.DAL.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.SeedData();
 
             /*builder.ApplyConfiguration(new RoleConfiguration());*/
 

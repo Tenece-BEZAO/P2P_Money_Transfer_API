@@ -14,15 +14,17 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
 
         Task<ApplicationUser> GetCustomerByUserNameAll(string userName);
 
-        Task<ApplicationUser> GetCustomerByAccountNumber(long number);
+        Task<ApplicationUser> GetCustomerByAccountNumber(string accountNumber);
 
         Task<TransactionHistory> GetTransactionById(long Id);
 
         Task<ApplicationUser> EditCustomerDetails(string userName, JsonPatchDocument<ApplicationUser> user);
 
-        Task<ApplicationUser> DeactivateCustomer(string userName, JsonPatchDocument<ApplicationUser> user);
+        /*Task<ApplicationUser> EditSingleCustomerDetail(string userName);*/
 
-        Task<ApplicationUser> Delete(string userName, JsonPatchDocument<ApplicationUser> user); //soft delete
+        Task<ApplicationUser> DeactivateCustomer(string userName);
+
+        Task<ApplicationUser> Delete(string userName); //soft delete
 
         Task<ApplicationUser> DeleteCustomer(string userName); //hard delete
     }

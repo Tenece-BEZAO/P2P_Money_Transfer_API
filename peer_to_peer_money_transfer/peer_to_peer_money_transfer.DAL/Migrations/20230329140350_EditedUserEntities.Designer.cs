@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using peer_to_peer_money_transfer.DAL.Context;
 
@@ -11,9 +12,11 @@ using peer_to_peer_money_transfer.DAL.Context;
 namespace peer_to_peer_money_transfer.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230329140350_EditedUserEntities")]
+    partial class EditedUserEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,10 +163,6 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("AccountNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("Activated")
                         .HasColumnType("bit");
 
@@ -174,9 +173,6 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                     b.Property<string>("BVN")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,4)");
 
                     b.Property<DateTime?>("Birthday")
                         .HasColumnType("datetime2");
@@ -189,6 +185,9 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
 
                     b.Property<string>("CAC")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("ComplainsId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -256,6 +255,9 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long>("TransactionHistoryId")
+                        .HasColumnType("bigint");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -274,6 +276,8 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ComplainsId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -281,6 +285,8 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("TransactionHistoryId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -359,9 +365,6 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("ComplainDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -382,8 +385,6 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.ToTable("Complains");
                 });
 
@@ -397,9 +398,6 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,4)");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DateStamp")
                         .HasColumnType("datetime2");
@@ -416,8 +414,6 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("TransactionHistories");
                 });
@@ -463,6 +459,25 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                     b.Navigation("ApplicatonRole");
                 });
 
+            modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.ApplicationUser", b =>
+                {
+                    b.HasOne("peer_to_peer_money_transfer.DAL.Entities.Complains", "Complains")
+                        .WithMany()
+                        .HasForeignKey("ComplainsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("peer_to_peer_money_transfer.DAL.Entities.TransactionHistory", "TransactionHistory")
+                        .WithMany()
+                        .HasForeignKey("TransactionHistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Complains");
+
+                    b.Navigation("TransactionHistory");
+                });
+
             modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.ApplicationUserClaim", b =>
                 {
                     b.HasOne("peer_to_peer_money_transfer.DAL.Entities.ApplicationUser", null)
@@ -495,20 +510,6 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.Complains", b =>
-                {
-                    b.HasOne("peer_to_peer_money_transfer.DAL.Entities.ApplicationUser", null)
-                        .WithMany("Complains")
-                        .HasForeignKey("ApplicationUserId");
-                });
-
-            modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.TransactionHistory", b =>
-                {
-                    b.HasOne("peer_to_peer_money_transfer.DAL.Entities.ApplicationUser", null)
-                        .WithMany("TransactionHistory")
-                        .HasForeignKey("ApplicationUserId");
-                });
-
             modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.ApplicationRole", b =>
                 {
                     b.Navigation("RoleClaims");
@@ -520,13 +521,9 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                 {
                     b.Navigation("Claims");
 
-                    b.Navigation("Complains");
-
                     b.Navigation("Logins");
 
                     b.Navigation("Tokens");
-
-                    b.Navigation("TransactionHistory");
 
                     b.Navigation("UserRoles");
                 });

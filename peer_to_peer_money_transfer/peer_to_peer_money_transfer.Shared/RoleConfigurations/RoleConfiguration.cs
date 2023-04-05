@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity; 
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,7 +18,13 @@ namespace peer_to_peer_money_transfer.Shared.RoleConfigurations
                 {
                     Name = "Administrator",
                     NormalizedName = "ADMINISTRATOR"
-                }
+                },
+                  new IdentityRole
+                  {
+                      Name = "SuperAdministrator",
+                      NormalizedName = "SUPERADMINISTRATOR"
+                  }
             );
         }
-    }}
+    }
+}

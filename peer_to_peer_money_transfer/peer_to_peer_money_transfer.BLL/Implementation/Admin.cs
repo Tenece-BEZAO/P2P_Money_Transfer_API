@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using peer_to_peer_money_transfer.BLL.Interfaces;
+using peer_to_peer_money_transfer.BLL.Models;
+using peer_to_peer_money_transfer.DAL.Dtos.Requests;
 using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.DAL.Interfaces;
 using peer_to_peer_money_transfer.Shared.DataTransferObject;
@@ -48,9 +50,11 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             return select;
         }
 
-        public async Task<ApplicationUser> GetCustomerByAccountNumber(long number)
+        public async Task<ApplicationUser> GetCustomerByAccountNumber(string accountNumber)
         {
-            return await _userRepoService.GetByIdAsync(number);
+            var number = await _userRepoService.GetSingleByAsync(x => x.AccountNumber == accountNumber);
+
+            return number;
         }
 
         public async Task<TransactionHistory> GetTransactionById(long Id)
@@ -67,23 +71,29 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             return await _userRepoService.UpdateAsync(update);
         }
 
-        public async Task<ApplicationUser> DeactivateCustomer(string userName, JsonPatchDocument<ApplicationUser> user)
+/*        public async Task<ApplicationUser> EditSingleCustomerDetail(EditUser edit)
         {
-            var deActivate = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
-            user.ApplyTo(deActivate);
+            var user = await _userRepoService.GetSingleByAsync(x => x.UserName == edit.UserName);
+            user.edit.Field = edit.Output;
 
-            return await _userRepoService.UpdateAsync(deActivate);
+            return await _userRepoService.UpdateAsync(user);
+        }*/
+
+        public async Task<ApplicationUser> DeactivateCustomer(string userName)
+        {
+            var deactivateUser = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
+            deactivateUser.Activated = false;
+
+            return await _userRepoService.UpdateAsync(deactivateUser);
         }
 
-        public async Task<ApplicationUser> Delete(string userName, JsonPatchDocument<ApplicationUser> user)
+        public async Task<ApplicationUser> Delete(string userName)
         {
-            var delete = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
+            var deleteUser = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
 
-            var result = user.Replace(x => x.FirstName, "JOHN");
+            deleteUser.Deleted = true;
 
-            result.ApplyTo(delete);
-
-            return await _userRepoService.UpdateAsync(delete);
+            return await _userRepoService.UpdateAsync(deleteUser);
         }
         public async Task<ApplicationUser> DeleteCustomer(string userName)
         {
