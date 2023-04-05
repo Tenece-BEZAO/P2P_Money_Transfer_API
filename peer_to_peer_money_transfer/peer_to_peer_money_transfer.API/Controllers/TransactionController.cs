@@ -33,25 +33,12 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Gets transaction history with AccountNumber", Type = typeof(SuccessResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        public async Task<ActionResult<TransactionHistoryResponse>> User_Transaction_History()
+        public async Task<ActionResult<IEnumerable<TransactionHistory>>> User_Transaction_History()
         {
-            TransactionHistoryResponse model = await _transactionsServices.GetTransactionHistoriesAsync();
+            var model = await _transactionsServices.GetTransactionHistoriesAsync();
 
             return Ok(model);
         }
-
-
-        //[HttpPost("file-complains")]
-        //[SwaggerOperation(Summary = "Sends complains to the db")]
-        //[SwaggerResponse(StatusCodes.Status200OK, Description = "Sends complains to the db", Type = typeof(SuccessResponse))]
-        //[SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
-        //[SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        //public async Task<ActionResult<Response>> User_Complains(ComplainRequest complain)
-        //{
-        //    var model = await _transactionsServices.FileComplainAsync(complain);
-
-        //    return Ok(model);
-        //}
 
 
         // GET api/values/5
