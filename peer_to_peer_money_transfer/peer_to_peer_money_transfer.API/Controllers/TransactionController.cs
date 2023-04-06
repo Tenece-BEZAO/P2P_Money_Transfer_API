@@ -40,7 +40,19 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(model);
         }
 
-        
+
+        [HttpPost("file-complains")]
+        [SwaggerOperation(Summary = "Sends complains to the db")]
+        [SwaggerResponse(StatusCodes.Status200OK, Description = "Sends complains to the db", Type = typeof(SuccessResponse))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
+        public async Task<ActionResult<Response>> User_Complains(ComplainRequest complain)
+        {
+            var model = await _transactionsServices.FileComplainAsync(complain);
+
+            return Ok(model);
+        }
+
 
         // GET api/values/5
 
@@ -53,6 +65,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
         public async Task<ActionResult<ReceiverNameResponse>> Receiver_Name(AccountNumberRequest User)
         {
             
+
             ReceiverNameResponse model = await _transactionsServices.GetReceiverNameAsync(User) ;
             
             return Ok(model);
@@ -83,6 +96,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
 
             return Ok(model);
         }
+
         // PUT api/values/5
         [AllowAnonymous]
         [HttpPut("transfer-money-to-Another-User")]

@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,7 @@
 	
   <ItemGroup>
     <ProjectReference Include="..\peer_to_peer_money_transfer.BLL\peer_to_peer_money_transfer.BLL.csproj" />
+    <ProjectReference Include="..\peer_to_peer_money_transfer.DAL\peer_to_peer_money_transfer.DAL.csproj" />
     <ProjectReference Include="..\peer_to_peer_money_transfer.Shared\peer_to_peer_money_transfer.Shared.csproj" />
   </ItemGroup>
 

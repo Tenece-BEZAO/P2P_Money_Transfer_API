@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using peer_to_peer_money_transfer.DAL.DataTransferObject;
 using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.Shared.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,18 +11,19 @@ namespace peer_to_peer_money_transfer.Shared.JwtConfigurations
 {
     public class JwtConfig : IJwtConfig
     {
-        private ApplicationUser _user;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public JwtConfig(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public JwtConfig(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IConfiguration configuration)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
             _configuration = configuration;
         }
 
         public async Task<string> GenerateJwtToken(ApplicationUser user)
-        {
+        { 
             var signInCredentials = GetSignInCredentials();
             var claims = await GetClaims(user);
             var jwtToken = GenerateToken(signInCredentials, claims);
@@ -46,21 +46,37 @@ namespace peer_to_peer_money_transfer.Shared.JwtConfigurations
         {
             // Create some claims for the token
             var claims = new List<Claim>
-            {
+            { 
                 new Claim(JwtRegisteredClaimNames.Name, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()),
             };
 
+            //Getting claims assigned to user
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            claims.AddRange(userClaims);
 
-            var roles = await _userManager.GetRolesAsync(user);
+            //Get user roles and add to claims
+            var userRoles = await _userManager.GetRolesAsync(user);
 
-            foreach (var role in roles)
+            foreach (var userRole in userRoles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
+                var role = await _roleManager.FindByNameAsync(userRole);
+                 
+                if (role != null)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, userRole));
 
+                    var  roleClaims = await _roleManager.GetClaimsAsync(role);  
+
+                    foreach (var roleClaim in roleClaims)
+                    {
+                        claims.Add(roleClaim);
+                    }
+                }
+            }
+             
             return claims;
         }
 
@@ -80,14 +96,6 @@ namespace peer_to_peer_money_transfer.Shared.JwtConfigurations
             );
 
             return token;
-        }
-
-
-        public async Task<bool> ValidateUser(LoginDTO loginDTO)
-        {
-            _user = await _userManager.FindByNameAsync(loginDTO.UserName);
-
-            return _user != null && await _userManager.CheckPasswordAsync(_user, _user.PasswordHash);
         }
     }
 }

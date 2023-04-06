@@ -24,9 +24,15 @@ namespace peer_to_peer_money_transfer.Shared.DataTransferObject
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Account Type is Required")]
-        [Display(Name = "Account Type")]
-        public UserType AccountType { get; set; }
+        [Required(ErrorMessage = "Admin Address is Required")]
+        public string Address { get; set; } = null!;
 
+        public string? NIN { get; set; }
+
+        public UserType UserTypeId { get; set; } = UserType.Admin;
+
+        public string AccountNumber { get; set; } = "123";
+
+        public string BVN { get; set; }
     }
 }

@@ -1,8 +1,6 @@
-﻿using peer_to_peer_money_transfer.DAL.Dtos.Requests;
+﻿using Microsoft.AspNetCore.JsonPatch;
 using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.Shared.DataTransferObject;
-using peer_to_peer_money_transfer.DAL.Dtos.Responses;
-
 
 namespace peer_to_peer_money_transfer.BLL.Interfaces
 {
@@ -10,22 +8,24 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
     {
         Task<IEnumerable<ApplicationUser>> GetAll();
 
-        Task<GetCharacterDTO> GetAllCustomers();
+        Task<IEnumerable<GetCharacterDTO>> GetAllCustomers();
 
-        Task<ResponseStatus> GetCustomerByName(string name);
+        Task<GetCharacterDTO> GetCustomerByUserName(string userName);
 
-        Task<ApplicationUser> GetCustomerByAccountNumber(long number);
+        Task<ApplicationUser> GetCustomerByUserNameAll(string userName);
+
+        Task<ApplicationUser> GetCustomerByAccountNumber(string accountNumber);
 
         Task<TransactionHistory> GetTransactionById(long Id);
 
-        Task<ResponseStatus> RegisterAdmin();
+        Task<ApplicationUser> EditCustomerDetails(string userName, JsonPatchDocument<ApplicationUser> user);
 
-        Task<ApplicationUser> EditCustomerDetails(ApplicationUser user);
+        /*Task<ApplicationUser> EditSingleCustomerDetail(string userName);*/
 
-        Task<ResponseStatus> DeactivateCustomer(AccountNumberRequest accountNumber);
+        Task<ApplicationUser> DeactivateCustomer(string userName);
 
-        Task<ResponseStatus> Delete(AccountNumberRequest accountNumber); //implement soft delete
+        Task<ApplicationUser> Delete(string userName); //soft delete
 
-        Task DeleteCustomer(AccountNumberRequest accountNumber); //implement hard delete
+        Task<ApplicationUser> DeleteCustomer(string userName); //hard delete
     }
 }
