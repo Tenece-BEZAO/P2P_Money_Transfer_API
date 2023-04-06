@@ -3,9 +3,9 @@
 public enum UserType
 {
     Indiviual = 1,
-    Corporate,
-    Admin,
-    SuperAdmin
+    Corporate = 2,
+    Admin = 3,
+    SuperAdmin = 4
 }
 
 public static class UserTypeExtension

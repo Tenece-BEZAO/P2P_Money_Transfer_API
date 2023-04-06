@@ -37,10 +37,5 @@ namespace peer_to_peer_money_transfer.Shared.DataTransferObject
         public string? NIN { get; set; }
 
         public string BVN { get; set; }
-
-        public UserType UserTypeId { get; set; } = UserType.Indiviual;
-
-        public string AccountNumber { get; set; } = "123";
-
     }
 }

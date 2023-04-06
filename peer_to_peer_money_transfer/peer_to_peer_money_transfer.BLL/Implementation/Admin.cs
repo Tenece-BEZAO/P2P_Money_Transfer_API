@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using peer_to_peer_money_transfer.BLL.Interfaces;
-using peer_to_peer_money_transfer.BLL.Models;
-using peer_to_peer_money_transfer.DAL.Dtos.Requests;
 using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.DAL.Interfaces;
 using peer_to_peer_money_transfer.Shared.DataTransferObject;
@@ -71,14 +69,6 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             return await _userRepoService.UpdateAsync(update);
         }
 
-/*        public async Task<ApplicationUser> EditSingleCustomerDetail(EditUser edit)
-        {
-            var user = await _userRepoService.GetSingleByAsync(x => x.UserName == edit.UserName);
-            user.edit.Field = edit.Output;
-
-            return await _userRepoService.UpdateAsync(user);
-        }*/
-
         public async Task<ApplicationUser> DeactivateCustomer(string userName)
         {
             var deactivateUser = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
@@ -95,6 +85,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
 
             return await _userRepoService.UpdateAsync(deleteUser);
         }
+
         public async Task<ApplicationUser> DeleteCustomer(string userName)
         {
             var delete = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
