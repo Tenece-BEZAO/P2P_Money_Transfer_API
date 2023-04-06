@@ -20,8 +20,6 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
 
         Task<ApplicationUser> EditCustomerDetails(string userName, JsonPatchDocument<ApplicationUser> user);
 
-        /*Task<ApplicationUser> EditSingleCustomerDetail(string userName);*/
-
         Task<ApplicationUser> DeactivateCustomer(string userName);
 
         Task<ApplicationUser> Delete(string userName); //soft delete

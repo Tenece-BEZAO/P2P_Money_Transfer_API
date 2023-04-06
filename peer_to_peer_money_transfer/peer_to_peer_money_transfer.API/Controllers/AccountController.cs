@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using peer_to_peer_money_transfer.BLL.Models;
 using peer_to_peer_money_transfer.DAL.DataTransferObject;
 using peer_to_peer_money_transfer.DAL.Entities;
+using peer_to_peer_money_transfer.DAL.Enums;
 using peer_to_peer_money_transfer.Shared.DataTransferObject;
 using peer_to_peer_money_transfer.Shared.Interfaces;
 using peer_to_peer_money_transfer.Shared.SmsConfiguration;
@@ -14,6 +14,7 @@ using System.ComponentModel.DataAnnotations;
 namespace peer_to_peer_money_transfer.API.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
     [Route("CashMingle/[controller]")]
     public class AccountController : ControllerBase
     {
@@ -37,6 +38,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             _sendSms = sendSms;
         }
 
+        [Authorize(Policy = "SuperAdmin")]
         [HttpPost("register/admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminDTO admin)
         {
@@ -57,6 +59,8 @@ namespace peer_to_peer_money_transfer.API.Controllers
             try
             {
                var user = _mapper.Map<ApplicationUser>(admin);
+                user.UserTypeId = UserType.Admin;
+                user.UserRole = UserRole.Admin;
 
                 var result = await _userManager.CreateAsync(user, user.PasswordHash);
 
@@ -64,8 +68,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
                 {
                     return BadRequest("User Registration Failed");
                 }
-
-                await _userManager.AddToRoleAsync(user, "Administrator");
 
                 return Accepted(new { Token = await _jwtConfig.GenerateJwtToken(user) });
             }
@@ -96,15 +98,15 @@ namespace peer_to_peer_money_transfer.API.Controllers
             try
             {
                 var user = _mapper.Map<ApplicationUser>(register);
-          
+                user.UserTypeId = UserType.Indiviual;
+                user.UserRole = UserRole.User;
+
                 var result = await _userManager.CreateAsync(user, user.PasswordHash);
 
                 if (!result.Succeeded)
                 {
                     return BadRequest("User Registration Failed");
                 }
-
-                await _userManager.AddToRoleAsync(user, "User");
 
                 return Accepted(new { Token = await _jwtConfig.GenerateJwtToken(user) });
             }
@@ -136,6 +138,8 @@ namespace peer_to_peer_money_transfer.API.Controllers
             {
 
                 var user = _mapper.Map<ApplicationUser>(business);
+                user.UserTypeId = UserType.Corporate;
+                user.UserRole = UserRole.User;
 
                 var result = await _userManager.CreateAsync(user, user.PasswordHash);
 
@@ -143,8 +147,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
                 {
                     return BadRequest("User Registration Failed");
                 }
-
-                await _userManager.AddToRoleAsync(user, "User");
 
                 return Accepted(new { Token = await _jwtConfig.GenerateJwtToken(user) });
             }
@@ -155,19 +157,13 @@ namespace peer_to_peer_money_transfer.API.Controllers
             }
         }
 
-        /* private async Task VerifyMailAsync(ApplicationUser user)
-         {
-             //Add Token to verify email
-             var token = _userManager.GenerateEmailConfirmationTokenAsync(user);
-             var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { token, email = user.Email }, Request.Scheme);
-             var message = new Message(new string[] { user.Email }, "CashMingle -- EMAIL CONFIRMATION LINK", confirmationLink);
-             await _emailSender.SendEmailAsync(message);
-
-             if (user.EmailConfirmed == true)
-             {
-                 user.Activated = true;
-             }
-         }*/
+        private async Task VerifyMailAsync(ApplicationUser user)
+        {
+            //Add Token to verify email
+            var token = _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account", new { token, email = user.Email }, Request.Scheme);
+            await _emailSender.SendEmailAsync(user.Email, confirmationLink);
+        }
 
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(string email, string token)
@@ -191,7 +187,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         [HttpGet("verify-phoneNo")]
-        [AllowAnonymous]
         public async Task<IActionResult> VerifyPhoneNumberAsync(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -214,7 +209,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         [HttpPost("verify-phoneNo")]
-        [AllowAnonymous]
         public async Task<IActionResult> VerifyPhoneNumberAsync(string userName, string token)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -232,14 +226,19 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         [HttpPost("login")]
-        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginDTO login)
         {
             _logger.LogInformation($"Login Attempt for {login.UserName}");
+            var user = await _userManager.FindByNameAsync(login.UserName);
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            if (user.EmailConfirmed == true)
+            {
+                user.Activated = true;
             }
 
             var existingUser = await _userManager.FindByNameAsync(login.UserName);
@@ -249,10 +248,11 @@ namespace peer_to_peer_money_transfer.API.Controllers
                 return BadRequest(new { error = "User does not exist" });
             }
 
-           /* if (existingUser.Activated != true)
+            if (existingUser.Activated != true)
             {
                 await VerifyMailAsync(existingUser);
-            }*/
+                return BadRequest(new { error = "A confirmation link has been sent to your email. please verify your email before you proceed" });
+            }
 
             try
             {
@@ -267,7 +267,8 @@ namespace peer_to_peer_money_transfer.API.Controllers
                 if (existingUser.TwoFactorEnabled)
                 {
                     var token = await _userManager.GenerateTwoFactorTokenAsync(existingUser, "CashMingle");
-                    //await _smsSender.SendSmsAsync(existingUser.PhoneNumber, token);
+                    var model = new SmsModel() { Receiver = existingUser.PhoneNumber, MessageBody = token};
+                    await _sendSms.SendSmsAsync(model);
 
                     return RedirectToAction("VerifyOTP", "AccountController", new VerifyOtpModel() { User = existingUser, Token = token });
                 }
@@ -283,7 +284,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         [HttpPost("verify-otp")]
-        [AllowAnonymous]
         public async Task<IActionResult> VerifyOTP(VerifyOtpModel model)
         {
             var result = await _signInManager.TwoFactorSignInAsync("CashMingle", model.Token, false, false);
@@ -297,7 +297,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         [HttpPost("forgot-password")]
-        [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword([Required] string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -314,9 +313,8 @@ namespace peer_to_peer_money_transfer.API.Controllers
                 return BadRequest(new { error = "Password reset link failed...please try again" });
             }
 
-           /* var forgotPasswordLink = Url.Action(nameof(ResetPassword), "Account", new { token, email = user.Email }, Request.Scheme);
-            var message = new Message(new string[] { user.Email }, "CashMingle -- RESET PASSWORD LINK", forgotPasswordLink);
-            await _emailSender.SendEmailAsync(message);*/
+            var forgotPasswordLink = Url.Action(nameof(ResetPassword), "Account", new { token, email = user.Email }, Request.Scheme);
+            await _emailSender.SendEmailAsync(user.Email, forgotPasswordLink);
 
             return Ok(new { result = "Password reset link sent...please check your mail" });
         }
@@ -330,7 +328,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         [HttpPost("reset-password")]
-        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
         {
             var user = await _userManager.FindByEmailAsync(resetPassword.Email);
@@ -346,7 +343,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         [HttpPost("send-text")]
-        [AllowAnonymous]
         public async Task<IActionResult> SendText(SmsModel model)
         {
             await _sendSms.SendSmsAsync(model);
@@ -355,7 +351,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
 
         }
 
-        [HttpPost("e--mail")]
+        [HttpPost("email")]
         public async Task<IActionResult> EmailMe(string emailAdress, string message)
         {
             await _emailSender.SendEmailAsync(emailAdress, message);

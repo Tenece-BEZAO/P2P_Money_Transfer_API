@@ -39,6 +39,8 @@ namespace peer_to_peer_money_transfer.DAL.Entities
         
         public bool Lien { get; set; } = false;
 
+        public UserRole UserRole { get; set; }
+
         public virtual ICollection<Complains>? Complains { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }

@@ -9,7 +9,7 @@ namespace peer_to_peer_money_transfer.BLL.Extensions
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("SuperAdmin",
-                    policy => policy.RequireClaim("superAdmin"));
+                    policy => policy.RequireRole("SuperAdmin"));
             });
         }
     }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using peer_to_peer_money_transfer.DAL.Context;
 
@@ -11,9 +12,11 @@ using peer_to_peer_money_transfer.DAL.Context;
 namespace peer_to_peer_money_transfer.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230405234235_seeding-data")]
+    partial class seedingdata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,6 +114,24 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "ab1e2d52-ab68-43a6-8057-780a6a45b518",
+                            Active = true,
+                            ConcurrencyStamp = "28f9e430-50d0-42ff-bf47-30692fd63b72",
+                            CreatedAt = new DateTime(2023, 4, 6, 0, 42, 34, 733, DateTimeKind.Local).AddTicks(2234),
+                            Name = "Administrator"
+                        },
+                        new
+                        {
+                            Id = "e6b8bf46-c022-4f4a-a559-2349fc205b55",
+                            Active = true,
+                            ConcurrencyStamp = "1a88e3d6-1b76-4be9-af90-d49190f745ba",
+                            CreatedAt = new DateTime(2023, 4, 6, 0, 42, 34, 733, DateTimeKind.Local).AddTicks(2286),
+                            Name = "User"
+                        });
                 });
 
             modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.ApplicationRoleClaim", b =>
@@ -264,9 +285,6 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("UserRole")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserTypeId")
                         .HasColumnType("int");
 
@@ -284,6 +302,34 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "super-admin",
+                            AccessFailedCount = 0,
+                            Activated = false,
+                            Address = "cashmingleaddress",
+                            Balance = 0m,
+                            ConcurrencyStamp = "c358837b-ee0c-4872-b13d-88e9ecb9cfcb",
+                            CreatedAt = new DateTime(2023, 4, 6, 0, 42, 34, 733, DateTimeKind.Local).AddTicks(1747),
+                            Deleted = false,
+                            Email = "cashmingle@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "cashMingleAdministrator",
+                            LastName = "cashMingleAdministrator",
+                            Lien = false,
+                            LockoutEnabled = false,
+                            NIN = "12345678900",
+                            PasswordHash = "123@Aa",
+                            PhoneNumber = "+2348080000000",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "1bea66de-81bc-4a13-b204-f2933975d08a",
+                            TwoFactorEnabled = false,
+                            UserName = "superAdministrator",
+                            UserTypeId = 3,
+                            Verified = false
+                        });
                 });
 
             modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.ApplicationUserClaim", b =>
