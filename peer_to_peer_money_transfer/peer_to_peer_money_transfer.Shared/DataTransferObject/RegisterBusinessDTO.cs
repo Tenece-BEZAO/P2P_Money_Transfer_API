@@ -40,8 +40,10 @@ namespace peer_to_peer_money_transfer.Shared.DataTransferObject
 
         public string? CAC { get; set; }
 
+        public string AccountNumber { get; set; }
+
         public UserType UserTypeId { get; set; } = UserType.Corporate;
 
-        public string AccountNumber { get; set; } = "123";
+        public UserRole UserRole { get; set; } = UserRole.User;
     }
 }

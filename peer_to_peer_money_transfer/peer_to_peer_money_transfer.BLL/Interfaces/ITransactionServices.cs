@@ -18,13 +18,15 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
 
         Task<Response> SetTransferAsync(TransactionModel transactionModel);
 
-        Task<TransactionHistoryResponse> GetTransactionHistoriesAsync();
+        Task<IEnumerable<TransactionHistory>> GetTransactionHistoriesAsync();
 
         Task<Response> GetBalanceAsync(AccountNumberRequest AccountNumber);
 
         decimal GetTranscationFee(UserType userType, decimal Amount);
 
-        
+
     }
+    
+
 }
 

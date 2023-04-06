@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using peer_to_peer_money_transfer.BLL.Models;
 using peer_to_peer_money_transfer.DAL.DataTransferObject;
 using peer_to_peer_money_transfer.DAL.Entities;
@@ -65,8 +64,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
                     return BadRequest("User Registration Failed");
                 }
 
-                await _userManager.AddToRoleAsync(user, "Administrator");
-
                 return Accepted(new { Token = await _jwtConfig.GenerateJwtToken(user) });
             }
             catch (Exception ex)
@@ -103,8 +100,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
                 {
                     return BadRequest("User Registration Failed");
                 }
-
-                await _userManager.AddToRoleAsync(user, "User");
 
                 return Accepted(new { Token = await _jwtConfig.GenerateJwtToken(user) });
             }
@@ -143,8 +138,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
                 {
                     return BadRequest("User Registration Failed");
                 }
-
-                await _userManager.AddToRoleAsync(user, "User");
 
                 return Accepted(new { Token = await _jwtConfig.GenerateJwtToken(user) });
             }
@@ -355,7 +348,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
 
         }
 
-        [HttpPost("e--mail")]
+        [HttpPost("email")]
         public async Task<IActionResult> EmailMe(string emailAdress, string message)
         {
             await _emailSender.SendEmailAsync(emailAdress, message);

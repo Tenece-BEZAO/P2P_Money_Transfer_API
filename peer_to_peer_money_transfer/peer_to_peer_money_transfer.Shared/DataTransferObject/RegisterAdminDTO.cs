@@ -31,8 +31,6 @@ namespace peer_to_peer_money_transfer.Shared.DataTransferObject
 
         public UserType UserTypeId { get; set; } = UserType.Admin;
 
-        public string AccountNumber { get; set; } = "123";
-
-        public string BVN { get; set; }
+        public UserRole UserRole { get; set; } = UserRole.Admin;
     }
 }
