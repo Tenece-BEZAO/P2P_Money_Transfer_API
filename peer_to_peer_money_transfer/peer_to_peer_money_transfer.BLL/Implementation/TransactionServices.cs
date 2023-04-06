@@ -79,29 +79,15 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             
         }
 
-        public async Task<TransactionHistoryResponse> GetTransactionHistoriesAsync()
+        public async Task<IEnumerable<TransactionHistory>> GetTransactionHistoriesAsync()
         {
             string? _userId = _contextAccessor.HttpContext?.User.GetUserId();
 
             var Transactions = await _transactionHistoryRepo.GetByAsync(a => a.UserId == _userId);
 
-            TransactionHistoryResponse transactionreponse = new TransactionHistoryResponse();
+            
 
-            if (Transactions == null) throw new InvalidOperationException("No Transaction found");
-
-            foreach (var transactionHistory in Transactions)
-            {
-                 transactionreponse = new TransactionHistoryResponse
-                {
-                    Date = transactionHistory.DateStamp,
-                    Amount = transactionHistory.Amount,
-                    TransactionType = transactionHistory.TransactionType,
-                    Description = transactionHistory.Description,
-                };
-               
-            }
-
-            return transactionreponse;
+            return Transactions;
         }
 
         public decimal GetTranscationFee(UserType userType, decimal Amount)
