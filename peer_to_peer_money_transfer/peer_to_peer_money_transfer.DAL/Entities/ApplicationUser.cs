@@ -8,12 +8,13 @@ namespace peer_to_peer_money_transfer.DAL.Entities
     {
         public string FirstName { get; set; }
         public string? MiddleName { get; set; }
-        public string AccountNumber { get; set; } = null!;
+
+        public string? AccountNumber { get; set; } 
         [Column(TypeName = "decimal(18,4)")]
         public decimal Balance { get; set; } = 0;
         public string LastName { get; set; }
         public string? RecoveryMail { get; set; }
-        public DateTime? Birthday { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public UserType UserTypeId { get; set; }
 
         public string? BusinessName { get; set; }
@@ -26,7 +27,7 @@ namespace peer_to_peer_money_transfer.DAL.Entities
 
         public string? Profession { get; set; }
 
-        public string BVN { get; set; } = null!;
+        public string? BVN { get; set; }
 
         public string Address { get; set; } = null!;
 

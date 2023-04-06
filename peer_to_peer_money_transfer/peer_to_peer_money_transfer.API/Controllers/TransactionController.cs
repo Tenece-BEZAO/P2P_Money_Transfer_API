@@ -41,17 +41,17 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
 
-        [HttpPost("file-complains")]
-        [SwaggerOperation(Summary = "Sends complains to the db")]
-        [SwaggerResponse(StatusCodes.Status200OK, Description = "Sends complains to the db", Type = typeof(SuccessResponse))]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
-        [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        public async Task<ActionResult<Response>> User_Complains(ComplainRequest complain)
-        {
-            var model = await _transactionsServices.FileComplainAsync(complain);
+        //[HttpPost("file-complains")]
+        //[SwaggerOperation(Summary = "Sends complains to the db")]
+        //[SwaggerResponse(StatusCodes.Status200OK, Description = "Sends complains to the db", Type = typeof(SuccessResponse))]
+        //[SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
+        //[SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
+        //public async Task<ActionResult<Response>> User_Complains(ComplainRequest complain)
+        //{
+        //    var model = await _transactionsServices.FileComplainAsync(complain);
 
-            return Ok(model);
-        }
+        //    return Ok(model);
+        //}
 
 
         // GET api/values/5
@@ -71,8 +71,8 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(model);
         }
 
-        [AllowAnonymous]
-        [HttpGet("get-balance-name")]
+        [Authorize]
+        [HttpGet("get-balance")]
         [SwaggerOperation(Summary = "Gets balance with AccountNumber")]
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Gets name with AccountNumber", Type = typeof(SuccessResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
@@ -84,13 +84,13 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(model);
         }
 
-      
+        [Authorize]
         [HttpPost("file-complains")]
         [SwaggerOperation(Summary = "Sends complains to the db")]
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Sends complains to the db", Type = typeof(SuccessResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "ACCOUNT NUMBER NOT FOUND", Type = typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        public async Task<ActionResult<Response>> User_Complains(ComplainRequest complain)
+        public async Task<ActionResult<Response>> UserComplains(ComplainRequest complain)
         {
             var model = await _transactionsServices.FileComplainAsync(complain);
 
@@ -98,7 +98,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         // PUT api/values/5
-        [AllowAnonymous]
+        [Authorize]
         [HttpPut("transfer-money-to-Another-User")]
         [SwaggerOperation(Summary = "Gets name with AccountNumber")]
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Performs transfer with AccountNumber", Type = typeof(SuccessResponse))]

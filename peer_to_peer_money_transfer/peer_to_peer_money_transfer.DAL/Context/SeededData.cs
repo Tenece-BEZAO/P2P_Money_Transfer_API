@@ -20,6 +20,7 @@ namespace peer_to_peer_money_transfer.DAL.Context
                     PhoneNumber = "+2348080000000",
                     Address = "cashmingleaddress",
                     NIN = "12345678900",
+                  
                     UserTypeId = Enums.UserType.Admin
                 }
             );
