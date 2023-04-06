@@ -15,12 +15,15 @@ public static class SqlClientRegistrationExtension
         {
             config = serviceProvider.GetService<IConfiguration>();
         }
-        string connectionString = config.GetConnectionString("DefaultConn");
+
+        string connectionString = config.GetConnectionString("DefaultConn") ?? throw new InvalidOperationException("Connection string 'DefaultConn' not found");
+
         services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
 
-        services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = false)
+        services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
        .AddDefaultTokenProviders()
        .AddEntityFrameworkStores<ApplicationDBContext>();
 
+        services.Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromMinutes(5));
     }
 }

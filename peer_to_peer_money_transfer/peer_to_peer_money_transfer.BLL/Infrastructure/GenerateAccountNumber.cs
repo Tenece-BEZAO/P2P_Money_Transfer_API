@@ -22,7 +22,7 @@ namespace peer_to_peer_money_transfer.BLL.Infrastructure
             const string Number = "37";
             Random random = new Random();
 
-            var randomNumber = random.Next(10000000, 20000000);
+            var randomNumber = random.Next(10000000, 99999999);
 
             string accountNumber = Number + randomNumber.ToString() ;
 
