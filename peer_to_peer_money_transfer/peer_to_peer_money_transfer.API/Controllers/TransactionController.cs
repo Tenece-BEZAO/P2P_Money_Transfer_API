@@ -18,6 +18,7 @@ using Response = peer_to_peer_money_transfer.DAL.Dtos.Responses.ResponseStatus;
 
 namespace peer_to_peer_money_transfer.API.Controllers
 {
+    [Authorize(Roles = "User")]
     [Route("CashMingle/[controller]")]
     public class TransactionController : Controller
     {
@@ -58,7 +59,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(model);
         }
 
-        [Authorize]
         [HttpGet("get-balance")]
         [SwaggerOperation(Summary = "Gets balance with AccountNumber")]
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Gets name with AccountNumber", Type = typeof(SuccessResponse))]
@@ -71,7 +71,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(model);
         }
 
-        [Authorize]
         [HttpPost("file-complains")]
         [SwaggerOperation(Summary = "Sends complains to the db")]
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Sends complains to the db", Type = typeof(SuccessResponse))]
@@ -85,7 +84,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
         }
 
         // PUT api/values/5
-        [Authorize]
         [HttpPut("transfer-money-to-Another-User")]
         [SwaggerOperation(Summary = "Gets name with AccountNumber")]
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Performs transfer with AccountNumber", Type = typeof(SuccessResponse))]

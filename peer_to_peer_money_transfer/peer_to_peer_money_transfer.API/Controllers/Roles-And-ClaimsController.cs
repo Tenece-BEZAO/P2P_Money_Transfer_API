@@ -9,7 +9,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
 {
     [ApiController]
     [Route("CashMingle/[controller]")]
-    /*[Authorize(Policy = "SuperAdmin")]*/
+    [Authorize(Policy = "SuperAdmin")]
     public class Roles_And_ClaimsController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -23,21 +23,21 @@ namespace peer_to_peer_money_transfer.API.Controllers
             _logger = logger;
         }
 
-        [HttpGet("GetAllRoles")]
+        [HttpGet("get-all-roles")]
         public async Task<IActionResult> GetAllRoles()
         {
             var roles = await _roleManager.Roles.ToListAsync();
             return Ok(roles);
         }
 
-        [HttpGet("GetAllUsers")]
+        [HttpGet("get-all-users")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userManager.Users.ToListAsync();
             return Ok(users);
         }
 
-        [HttpPost("CreateRole")]
+        [HttpPost("create-role")]
         public async Task<IActionResult> CreateRole(string name)
         {
             var rolesExist = await _roleManager.RoleExistsAsync(name);
@@ -56,7 +56,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(new { result = $"The Role {name} was created successfully" });
         }
 
-        [HttpPost("AddUserToRole")]
+        [HttpPost("add-user-to-role")]
         public async Task<IActionResult> AddUserToRole(string userName, string roleName)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -82,7 +82,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(new { result = "Success" });
         }
 
-        [HttpGet("GetUserRoles")]
+        [HttpGet("get-user-roles")]
         public async Task<IActionResult> GetUserRoles(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -97,7 +97,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(roles);
         }
 
-        [HttpPost("RemoveUserFromRole")]
+        [HttpPost("remove-user-from-role")]
         public async Task<IActionResult> RemoveUserFromRole(string userName, string roleName)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -127,7 +127,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(new { result = $"User {userName} has been removed from role {roleName}" });
         }
 
-        [HttpGet("GetAllClaims")]
+        [HttpGet("get-all-claims")]
         public async Task<IActionResult> GetAllClaims(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -142,7 +142,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(userClaims);
         }
 
-        [HttpPost("AddClaimToUser")]
+        [HttpPost("add-claim-to-user")]
         public async Task<IActionResult> AddClaimToUser(string userName, string claimName, string claimValue)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -165,7 +165,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(new { result = $"claim {claimName} has been added to {user}" });
         }
 
-        [HttpPost("RemoveUserClaim")]
+        [HttpPost("remove-user-claim")]
         public async Task<IActionResult> RemoveUserClaim(string userName, string claimName, string claimValue)
         {
             var user = await _userManager.FindByNameAsync(userName);

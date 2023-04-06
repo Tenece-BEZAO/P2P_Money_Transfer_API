@@ -1,6 +1,4 @@
-﻿using System;
-using Azure;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.BLL.Models;
@@ -23,8 +21,6 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         private readonly IRepository<ApplicationUser> _userProfileRepo;
         private readonly IHttpContextAccessor _contextAccessor;
       
-        private readonly UserManager<ApplicationUser> _userManager;
-
         public TransactionServices( IUnitOfWork unitOfWork, IHttpContextAccessor contextAccessor)
         {
             _unitOfWork = unitOfWork;
@@ -75,17 +71,14 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
 		        ReceiverFullName = $"{ User.FirstName} {User.MiddleName} {User.LastName}"
 		        };
 
-            throw new InvalidOperationException("Account not Found");
-            
+            throw new InvalidOperationException("Account not Found");          
         }
 
         public async Task<IEnumerable<TransactionHistory>> GetTransactionHistoriesAsync()
         {
             string? _userId = _contextAccessor.HttpContext?.User.GetUserId();
 
-            var Transactions = await _transactionHistoryRepo.GetByAsync(a => a.UserId == _userId);
-
-            
+            var Transactions = await _transactionHistoryRepo.GetByAsync(a => a.UserId == _userId);           
 
             return Transactions;
         }
@@ -99,8 +92,6 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
                 default:
                     return IndiviualTranscationFees(Amount);
             }
-
-
         }
 
         private static decimal IndiviualTranscationFees(decimal Amount)
