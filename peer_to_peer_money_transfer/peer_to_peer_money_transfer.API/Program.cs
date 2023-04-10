@@ -1,3 +1,8 @@
+
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using peer_to_peer_money_transfer.BLL.Extensions;

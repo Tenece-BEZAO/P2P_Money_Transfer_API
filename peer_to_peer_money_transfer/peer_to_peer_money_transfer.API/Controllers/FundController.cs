@@ -9,6 +9,7 @@ using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.DAL.Dtos.Requests;
 using Swashbuckle.AspNetCore.Annotations;
 using peer_to_peer_money_transfer.DAL.Extensions;
+using System.Security.Claims;
 
 namespace peer_to_peer_money_transfer.API.Controllers
 {
@@ -23,7 +24,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             _fundingService = fundingService;
             _contextAccessor = contextAccessor;
         }
-        [Authorize]
+        [Authorize(Roles = "User")]
         [HttpPost("make-deposit")]
         [SwaggerOperation(Summary = "Funds account using paystack")]
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Funding successful", Type = typeof(SuccessResponse))]
@@ -35,7 +36,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(response);
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [HttpPost("verify-payment")]
         [SwaggerOperation(Summary = "Verifying deposits using paystack")]
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Verification successful", Type = typeof(SuccessResponse))]
@@ -43,7 +44,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
         public async Task<ActionResult<Response>> Verify(string reference)
         {
-            string? userId = _contextAccessor.HttpContext?.User.GetUserId();
+            string? userId = _contextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
                 return new Response { Success = false, Data = "User not found" };
