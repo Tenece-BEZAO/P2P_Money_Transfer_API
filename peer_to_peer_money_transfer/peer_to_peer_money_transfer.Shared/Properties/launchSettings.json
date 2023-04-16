@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "peer_to_peer_money_transfer.Shared": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Key": "QKo7fM335pxCxcyZbJKJy3SlEDZBcTvz48QagkiK",
+        "Issuer": "CashMingle",
+        "DefaultConnection": "Data Source=RABBI\\\\SQLEXPRESS01;Integrated Security=True;Initial Catalog=CashMingle;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
+        "Lifetime": "15"
+      },
+      "remoteDebugEnabled": false
+    }
+  }
+}
