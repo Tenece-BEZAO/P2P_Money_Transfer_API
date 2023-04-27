@@ -15,24 +15,9 @@ namespace peer_to_peer_money_transfer.BLL.Extensions
                 config = serviceProvider.GetService<IConfiguration>();
             }
 
-            //var emailConfig = config.GetSection("EmailConfiguration").Get<EmailConfiguration>();
-            var emailConfig = config.GetSection("EmailConfiguration");
-            //var from = emailConfig.GetSection("From").Value;
-            var from = "rabbiincode@gmail.com";
-            //var server = emailConfig.GetSection("SmtpServer").Value;
-            var server = "smtp.gmail.com";
-            var port = emailConfig.GetSection("Port").Value;
-            //var userName = emailConfig.GetSection("Username").Value;
-            var userName = "rabbiincode@gmail.com";
-            //var password = emailConfig.GetSection("Password").Value;
-            var password = "ifchetxvlxumdenc";
+            var emailConfig = config.GetSection("EmailConfiguration").Get<EmailConfiguration>();
 
-
-            services.AddFluentEmail(from).AddRazorRenderer().AddSmtpSender(server, 587, userName, password);
-
-            /*services.AddSingleton(emailConfig);
-
-            services.AddControllers();*/
+            services.AddSingleton(emailConfig);
         }
     }
 }

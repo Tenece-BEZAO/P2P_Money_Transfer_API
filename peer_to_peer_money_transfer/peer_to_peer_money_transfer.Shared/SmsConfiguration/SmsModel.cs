@@ -2,7 +2,7 @@
 {
     public class SmsModel
     {
-        public string Receiver { get; set; }
+        public string ReceiversPhoneNumber { get; set; }
 
         public string MessageBody { get; set; }
     }

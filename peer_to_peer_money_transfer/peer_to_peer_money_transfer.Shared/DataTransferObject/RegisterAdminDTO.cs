@@ -1,10 +1,8 @@
-﻿using peer_to_peer_money_transfer.DAL.DataTransferObject;
-using peer_to_peer_money_transfer.DAL.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace peer_to_peer_money_transfer.Shared.DataTransferObject
 {
-    public class RegisterAdminDTO : LoginDTO
+    public class RegisterAdminDTO
     {
         [Required(ErrorMessage = "First Name is Required")]
         public string FirstName { get; set; } = null!;
@@ -24,7 +22,16 @@ namespace peer_to_peer_money_transfer.Shared.DataTransferObject
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [Required(ErrorMessage = "Admin Address is Required")]
+        [Required(ErrorMessage = "UserName name Must be Unique")]
+        public string UserName { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        [StringLength(20, ErrorMessage = "Your Password is limited to {2} to {1} characters", MinimumLength = 5)]
+        public string Password { get; set; }
+
+        [Required(ErrorMessage = "Address is Required")]
         public string Address { get; set; } = null!;
 
         public string? NIN { get; set; }

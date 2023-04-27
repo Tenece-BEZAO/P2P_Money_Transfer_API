@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Response = peer_to_peer_money_transfer.DAL.Dtos.Responses.ResponseStatus;
-
 using Microsoft.AspNetCore.Mvc;
 using PayStack.Net;
-using peer_to_peer_money_transfer.DAL.Dtos.Responses;
 using peer_to_peer_money_transfer.BLL.Infrastructure;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.DAL.Dtos.Requests;
 using Swashbuckle.AspNetCore.Annotations;
-using peer_to_peer_money_transfer.DAL.Extensions;
 using System.Security.Claims;
 
 namespace peer_to_peer_money_transfer.API.Controllers
@@ -30,9 +27,9 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [SwaggerResponse(StatusCodes.Status200OK, Description = "Funding successful", Type = typeof(SuccessResponse))]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Description = "Transaction failed", Type = typeof(ErrorResponse))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Description = "It's not you, it's us", Type = typeof(ErrorResponse))]
-        public async Task<ActionResult<TransactionInitializeResponse>> Deposit(DepositRequest depositRequest)
+        public ActionResult<TransactionInitializeResponse> Deposit(DepositRequest depositRequest)
         {
-            var response =  _fundingService.MakePayment(depositRequest);
+            var response = _fundingService.MakePayment(depositRequest);
             return Ok(response);
         }
 
@@ -52,6 +49,5 @@ namespace peer_to_peer_money_transfer.API.Controllers
             var response = await _fundingService.FundAccount(userId,reference);
             return Ok(response);
         }
-
     }
 }

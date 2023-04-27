@@ -1,37 +1,59 @@
-﻿using FluentEmail.Core;
-using Microsoft.Extensions.Logging;
+﻿using MailKit.Net.Smtp;
+using MimeKit;
 using peer_to_peer_money_transfer.Shared.Interfaces;
-using System.Text;
 
 namespace peer_to_peer_money_transfer.Shared.EmailConfiguration
 {
     public class EmailSender : IEmailSender
     {
-        private readonly IFluentEmail _email;
-        private readonly ILogger _logger;
+        private readonly EmailConfiguration _emailConfig;
 
-        public EmailSender(IFluentEmail email, ILogger<EmailSender> logger)
+        public EmailSender(EmailConfiguration emailConfig)
         {
-            _email = email;
-            _logger = logger;
+            _emailConfig = emailConfig;
         }
 
-        public async Task SendEmailAsync(string emailAdress, string message)
+        const string image = "https://firebasestorage.googleapis.com/v0/b/image-store-3e6e0.appspot.com/o/CashMingle.png?alt=media&token=aff6cd82-94ba-4a03-8b32-e7c414f7fffe";
+        public async Task SendEmailAsync(Message message)
         {
-            StringBuilder emailTemplate = new();
-            emailTemplate.AppendLine("<h2>cashMingle --Please click the link below to verify your email</h2>");
-            emailTemplate.AppendLine("<p>@Model.Message</p>");
-            emailTemplate.AppendLine("<p>from cashMingle</p>");
+            var emailMessage = CreateEmailMessage(message);
+            await SendAsync(emailMessage);
+        }
+         
+        private MimeMessage CreateEmailMessage(Message message)
+        {
+            var emailMessage = new MimeMessage();
+            emailMessage.From.Add(new MailboxAddress("CashMingle", _emailConfig.From));
+            emailMessage.To.AddRange(message.To);
+            emailMessage.Subject = message.Subject;
+            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = string.Format(
+                                "<h4 style='color:red;'>{0}</h4> <img src={1} alt='CashMingle' style='display:block;margin:0 auto;' width='100'/>", message.Content, image) };
 
-            var newEmail = _email
-                //.SetFrom()
-                .To(emailAdress)
-                //.To(emailAdress, Name)
-                .Subject("<h2>cashMingle --Please click the link below to verify your email</h2>")
-                .UsingTemplate(emailTemplate.ToString(), new { Message = message });
+            return emailMessage;
+        }
 
-            await newEmail.SendAsync();
-            _logger.LogError($"{message} sent successfully to {emailAdress}");
+        private async Task SendAsync(MimeMessage mailMessage)
+        {
+            using (var client = new SmtpClient())
+            {
+                try
+                {
+                    await client.ConnectAsync(_emailConfig.SmtpServer, _emailConfig.Port, true);
+                    client.AuthenticationMechanisms.Remove("XOAUTH2");
+                    await client.AuthenticateAsync(_emailConfig.UserName, _emailConfig.Password);
+
+                    client.Send(mailMessage);
+                }
+                catch
+                {
+                    throw;
+                }
+                finally
+                {
+                    await client.DisconnectAsync(true);
+                    client.Dispose();
+                }
+            }
         }
     }
 }

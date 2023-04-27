@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace peer_to_peer_money_transfer.DAL.DataTransferObject
+namespace peer_to_peer_money_transfer.BLL.Models
 {
-    public class LoginDTO
+    public class Login
     {
         [Required(ErrorMessage = "UserName name Must be Unique")]
-        public string UserName { get; set; }
+        public string EmailAddressOrUserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         [StringLength(20, ErrorMessage = "Your Password is limited to {2} to {1} characters", MinimumLength = 5)]
-        public string PasswordHash { get; set; }
+        public string Password { get; set; }
     }
 }

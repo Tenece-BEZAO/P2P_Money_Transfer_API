@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
-
 using PayStack.Net;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.DAL.Dtos.Requests;
-using peer_to_peer_money_transfer.DAL.Dtos.Responses;
 using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.DAL.Interfaces;
 using Response = peer_to_peer_money_transfer.DAL.Dtos.Responses.ResponseStatus;
@@ -59,9 +57,7 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
             TransactionInitializeRequest initializeRequest = _mapper.Map<TransactionInitializeRequest>(depositRequest);
             var result = payStack.Transactions.Initialize(initializeRequest);
             return result;
-        }
-
-       
+        }  
 
         public TransactionVerifyResponse VerifyPayment(string referenceCode)
         {

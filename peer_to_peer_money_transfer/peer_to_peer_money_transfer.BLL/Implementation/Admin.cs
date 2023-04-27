@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.JsonPatch;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.DAL.Entities;
+using peer_to_peer_money_transfer.DAL.Enums;
 using peer_to_peer_money_transfer.DAL.Interfaces;
 using peer_to_peer_money_transfer.Shared.DataTransferObject;
 
@@ -30,10 +31,13 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         public async Task<IEnumerable<GetCharacterDTO>> GetAllCustomers()
         {
             var allUser = await _userRepoService.GetAllAsync();
-
             var select = _mapper.Map<IEnumerable<GetCharacterDTO>>(allUser);
-
             return select;
+        }
+
+        public async Task<IEnumerable<ApplicationUser>> GetAllCustomersByCategory(UserType userType)
+        {
+            return await _userRepoService.GetByAsync(x => x.UserTypeId == userType);
         }
 
         public async Task<ApplicationUser> GetCustomerByUserNameAll(string userName)
@@ -51,7 +55,6 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         public async Task<ApplicationUser> GetCustomerByAccountNumber(string accountNumber)
         {
             var number = await _userRepoService.GetSingleByAsync(x => x.AccountNumber == accountNumber);
-
             return number;
         }
 
@@ -63,35 +66,57 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         public async Task<ApplicationUser> EditCustomerDetails(string userName, JsonPatchDocument<ApplicationUser> user)
         {
             var update = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
-
+            if (update == null) return null;
             user.ApplyTo(update);
-
             return await _userRepoService.UpdateAsync(update);
         }
 
-        public async Task<ApplicationUser> DeactivateCustomer(string userName)
+        public async Task<string> DeactivateCustomer(string userName)
         {
             var deactivateUser = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
+            if (deactivateUser == null) return null;
             deactivateUser.Activated = false;
-
-            return await _userRepoService.UpdateAsync(deactivateUser);
+            await _userRepoService.UpdateAsync(deactivateUser);
+            return "success";
         }
 
-        public async Task<ApplicationUser> Delete(string userName)
+        public async Task AccessFailedCount(string userName)
+        {
+            var count = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
+            count.AccessFailedCount += 1;
+            await _userRepoService.UpdateAsync(count);
+        }
+
+        public async Task ResetCount(string userName)
+        {
+            var resetCount = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
+            resetCount.AccessFailedCount = 0;
+            await _userRepoService.UpdateAsync(resetCount);
+        }
+
+        public async Task LockCustomer(string userName)
+        {
+            var lockedUser = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
+            lockedUser.Activated = false;
+            lockedUser.EmailConfirmed = false;
+            await _userRepoService.UpdateAsync(lockedUser);
+        }
+
+        public async Task<string> SoftDelete(string userName)
         {
             var deleteUser = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
-
+            if (deleteUser == null) return null;
             deleteUser.Deleted = true;
-
-            return await _userRepoService.UpdateAsync(deleteUser);
+            await _userRepoService.UpdateAsync(deleteUser);
+            return "success";
         }
 
-        public async Task<ApplicationUser> DeleteCustomer(string userName)
+        public async Task<string> DeleteCustomer(string userName)
         {
             var delete = await _userRepoService.GetSingleByAsync(x => x.UserName == userName);
-
+            if (delete == null) return null;
             await _userRepoService.DeleteByIdAsync(delete.Id);
-            return null;
+            return "success";
         }
     }
 }

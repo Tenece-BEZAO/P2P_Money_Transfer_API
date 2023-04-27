@@ -1,12 +1,6 @@
-
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using peer_to_peer_money_transfer.BLL.Extensions;
-using peer_to_peer_money_transfer.Shared.SmsConfiguration;
 
 namespace peer_to_peer_money_transfer.API
 {
@@ -23,21 +17,27 @@ namespace peer_to_peer_money_transfer.API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddAuthorization();
-
            
             builder.Services.AddAutoMapper(Assembly.Load("peer_to_peer_money_transfer.Shared"));
-            builder.Services.AddHttpContextAccessor();// Ben added
+            builder.Services.AddHttpContextAccessor();
 
-            builder.Services.RegisterServices();// Ben added
-            builder.Services.AddDatabaseConnection();// Ben added
+            builder.Services.RegisterServices();
+            builder.Services.AddDatabaseConnection();
             builder.Services.AddJwtAuthentication();
             builder.Services.AddPolicyAuthorization();
 
             builder.Services.ConfigureEmailServices();
-
             builder.Services.AddHttpClient("SmsClient", client =>
             {
                 client.BaseAddress = new Uri("https://www.bulksmsnigeria.com/api/v1/sms/create");
+            });
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.WithOrigins("https://localhost:4200", "https://localhost:4200")
+                    .AllowAnyHeader().AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                });
             });
 
             builder.Services.AddSwaggerGen(opt =>
@@ -84,11 +84,14 @@ namespace peer_to_peer_money_transfer.API
                 app.UseSwaggerUI();
             }
 
+            // custom exception handler
+            app.ConfigureExceptionHandler();
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
-
             app.UseAuthorization();
+            app.UseCors();
 
             app.MapControllers();
 

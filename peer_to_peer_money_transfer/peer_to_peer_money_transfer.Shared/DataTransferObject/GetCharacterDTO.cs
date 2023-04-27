@@ -14,7 +14,7 @@ namespace peer_to_peer_money_transfer.Shared.DataTransferObject
 
         public string PhoneNumber { get; set; }
 
-        public string? RecoveryMail { get; set; }
+        public string Email { get; set; }
 
         public DateTime? Birthday { get; set; }
 

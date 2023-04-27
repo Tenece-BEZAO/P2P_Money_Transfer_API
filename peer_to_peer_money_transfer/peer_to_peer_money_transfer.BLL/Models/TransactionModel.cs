@@ -1,5 +1,4 @@
-﻿using System;
-using peer_to_peer_money_transfer.DAL.Entities;
+﻿using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.DAL.Enums;
 
 namespace peer_to_peer_money_transfer.BLL.Models

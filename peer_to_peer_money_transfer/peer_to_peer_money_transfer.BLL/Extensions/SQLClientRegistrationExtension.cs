@@ -18,7 +18,11 @@ public static class SqlClientRegistrationExtension
 
         string connectionString = config.GetConnectionString("DefaultConn") ?? throw new InvalidOperationException("Connection string 'DefaultConn' not found");
 
-        services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
+        services.AddDbContext<ApplicationDBContext>(options =>
+        {
+            options.UseSqlServer(connectionString);
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        });
 
         services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
        .AddDefaultTokenProviders()

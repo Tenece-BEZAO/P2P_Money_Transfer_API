@@ -10,6 +10,7 @@ using peer_to_peer_money_transfer.Shared.Interfaces;
 using peer_to_peer_money_transfer.Shared.JwtConfigurations;
 using peer_to_peer_money_transfer.Shared.EmailConfiguration;
 using peer_to_peer_money_transfer.Shared.SmsConfiguration;
+using peer_to_peer_money_transfer.BLL.Infrastructure;
 
 namespace peer_to_peer_money_transfer.BLL.Extensions
 {
@@ -21,6 +22,7 @@ namespace peer_to_peer_money_transfer.BLL.Extensions
             services.AddTransient<ITransactionServices, TransactionServices>();
             services.AddScoped<UserManager<ApplicationUser>>();
             services.AddScoped<IAdmin, Admin>();
+            services.AddScoped<GenerateAccountNumber>();
             services.AddScoped<IJwtConfig, JwtConfig>();
             services.AddScoped<IEmailSender, EmailSender>();
             services.AddTransient<ISendSms, SendSms>();
