@@ -1,5 +1,4 @@
-﻿using System;
-using peer_to_peer_money_transfer.DAL.Dtos.Requests;
+﻿using peer_to_peer_money_transfer.DAL.Dtos.Requests;
 using peer_to_peer_money_transfer.DAL.Entities;
 using peer_to_peer_money_transfer.BLL.Models;
 using peer_to_peer_money_transfer.DAL.Enums;
@@ -23,10 +22,5 @@ namespace peer_to_peer_money_transfer.BLL.Interfaces
         Task<Response> GetBalanceAsync(AccountNumberRequest AccountNumber);
 
         decimal GetTranscationFee(UserType userType, decimal Amount);
-
-
     }
-    
-
 }
-

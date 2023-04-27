@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using peer_to_peer_money_transfer.BLL.Interfaces;
 using peer_to_peer_money_transfer.BLL.Models;
 using peer_to_peer_money_transfer.DAL.Dtos.Requests;
@@ -267,4 +266,3 @@ namespace peer_to_peer_money_transfer.BLL.Implementation
         }
     }
 }
-

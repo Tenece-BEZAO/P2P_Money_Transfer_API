@@ -9,7 +9,7 @@ namespace peer_to_peer_money_transfer.API.Controllers
 {
     [ApiController]
     [Route("CashMingle/[controller]")]
-    [Authorize(Policy = "SuperAdmin")]
+    /*[Authorize(Policy = "SuperAdmin")]*/
     public class Roles_And_ClaimsController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -28,13 +28,6 @@ namespace peer_to_peer_money_transfer.API.Controllers
         {
             var roles = await _roleManager.Roles.ToListAsync();
             return Ok(roles);
-        }
-
-        [HttpGet("get-all-users")]
-        public async Task<IActionResult> GetAllUsers()
-        {
-            var users = await _userManager.Users.ToListAsync();
-            return Ok(users);
         }
 
         [HttpPost("create-role")]
@@ -59,9 +52,8 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [HttpPost("add-user-to-role")]
         public async Task<IActionResult> AddUserToRole(string userName, string roleName)
         {
-            var user = await _userManager.FindByNameAsync(userName);
-
-            if (user == null) return BadRequest(new { error = "User does not exists" });
+            var user = await ValidateUser(userName);
+            if (user == null) { return UserNotFound(); }
 
             var role = await _roleManager.RoleExistsAsync(roleName);
 
@@ -85,13 +77,9 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [HttpGet("get-user-roles")]
         public async Task<IActionResult> GetUserRoles(string userName)
         {
-            var user = await _userManager.FindByNameAsync(userName);
+            var user = await ValidateUser(userName);
+            if (user == null) { return UserNotFound(); }
 
-            if (user == null)
-            {
-                _logger.LogInformation("User does not exists");
-                return BadRequest(new { error = "User does not exists" });
-            }
             var roles = await _userManager.GetRolesAsync(user);
 
             return Ok(roles);
@@ -100,13 +88,8 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [HttpPost("remove-user-from-role")]
         public async Task<IActionResult> RemoveUserFromRole(string userName, string roleName)
         {
-            var user = await _userManager.FindByNameAsync(userName);
-
-            if (user == null)
-            {
-                _logger.LogInformation("User does not exists");
-                return BadRequest(new { error = "User does not exists" });
-            }
+            var user = await ValidateUser(userName);
+            if (user == null) { return UserNotFound(); }
 
             var role = await _roleManager.RoleExistsAsync(roleName);
 
@@ -127,16 +110,11 @@ namespace peer_to_peer_money_transfer.API.Controllers
             return Ok(new { result = $"User {userName} has been removed from role {roleName}" });
         }
 
-        [HttpGet("get-all-claims")]
-        public async Task<IActionResult> GetAllClaims(string userName)
+        [HttpGet("get-user-claims")]
+        public async Task<IActionResult> GetUserClaims(string userName)
         {
-            var user = await _userManager.FindByNameAsync(userName);
-
-            if (user == null)
-            {
-                _logger.LogInformation("User does not exists");
-                return BadRequest(new { error = "User does not exists" });
-            }
+            var user = await ValidateUser(userName);
+            if (user == null) { return UserNotFound(); }
 
             var userClaims = await _userManager.GetClaimsAsync(user);
             return Ok(userClaims);
@@ -145,13 +123,8 @@ namespace peer_to_peer_money_transfer.API.Controllers
         [HttpPost("add-claim-to-user")]
         public async Task<IActionResult> AddClaimToUser(string userName, string claimName, string claimValue)
         {
-            var user = await _userManager.FindByNameAsync(userName);
-
-            if (user == null)
-            {
-                _logger.LogInformation("User does not exists");
-                return BadRequest(new { error = "User does not exists" });
-            }
+            var user = await ValidateUser(userName);
+            if (user == null) { return UserNotFound(); }
 
             var userClaim = new Claim(claimName, claimValue);
 
@@ -162,19 +135,14 @@ namespace peer_to_peer_money_transfer.API.Controllers
                 return BadRequest(new { error = $"Attempt to add claim {claimName} to {user} failed" });
             }
 
-            return Ok(new { result = $"claim {claimName} has been added to {user}" });
+            return Ok(new { result = $"claim {claimName} has been added to {userName}" });
         }
 
         [HttpPost("remove-user-claim")]
         public async Task<IActionResult> RemoveUserClaim(string userName, string claimName, string claimValue)
         {
-            var user = await _userManager.FindByNameAsync(userName);
-
-            if (user == null)
-            {
-                _logger.LogInformation("User does not exists");
-                return BadRequest(new { error = "User does not exists" });
-            }
+            var user = await ValidateUser(userName);
+            if (user == null) { return UserNotFound(); }
 
             var userClaim = new Claim(claimName, claimValue);
 
@@ -182,10 +150,24 @@ namespace peer_to_peer_money_transfer.API.Controllers
 
             if (!removeUserClaim.Succeeded)
             {
-                return BadRequest(new { error = $"Attempt to remove claim {claimName} from {user} failed" });
+                return BadRequest(new { error = $"Attempt to remove claim {claimName} from {userName} failed" });
             }
 
-            return Ok(new { result = $"claim {claimName} has been removed from {user}" });
+            return Ok(new { result = $"claim {claimName} has been removed from {userName}" });
         }
+
+        private async Task<ApplicationUser> ValidateUser(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            return user;
+        }
+
+        private ActionResult UserNotFound()
+        {
+            _logger.LogInformation("user does not exists");
+            return NotFound(new { error = "user does not exists" });
+        }
+
     }
 }
+ 

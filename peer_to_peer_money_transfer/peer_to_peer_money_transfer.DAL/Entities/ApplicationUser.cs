@@ -7,12 +7,13 @@ namespace peer_to_peer_money_transfer.DAL.Entities
     public class ApplicationUser : IdentityUser
     {
         public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string? MiddleName { get; set; }
 
-        public string? AccountNumber { get; set; } 
+        public string? AccountNumber { get; set; }
         [Column(TypeName = "decimal(18,4)")]
         public decimal Balance { get; set; } = 0;
-        public string LastName { get; set; }
+
         public string? RecoveryMail { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public UserType UserTypeId { get; set; }
@@ -38,8 +39,6 @@ namespace peer_to_peer_money_transfer.DAL.Entities
         public bool Deleted { get; set; } = false;
         
         public bool Lien { get; set; } = false;
-
-        public UserRole UserRole { get; set; }
 
         public virtual ICollection<Complains>? Complains { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;

@@ -1,5 +1,4 @@
-﻿using System;
-namespace peer_to_peer_money_transfer.DAL.Enums
+﻿namespace peer_to_peer_money_transfer.DAL.Enums
 {
     public enum TransactionLimit
     {
@@ -7,4 +6,3 @@ namespace peer_to_peer_money_transfer.DAL.Enums
         Corporate = 10000000
     }
 }
-

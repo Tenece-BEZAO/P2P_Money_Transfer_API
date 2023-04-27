@@ -1,5 +1,4 @@
-﻿using System;
-namespace peer_to_peer_money_transfer.DAL.Enums
+﻿namespace peer_to_peer_money_transfer.DAL.Enums
 {
     public enum DocumentType
     {
@@ -7,4 +6,3 @@ namespace peer_to_peer_money_transfer.DAL.Enums
         CAC_NO
     }
 }
-

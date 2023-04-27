@@ -111,6 +111,35 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "a1414a73-67cb-4880-97e2-d5506b8b1882",
+                            Active = true,
+                            ConcurrencyStamp = "1",
+                            CreatedAt = new DateTime(2023, 4, 26, 15, 25, 55, 837, DateTimeKind.Local).AddTicks(8649),
+                            Name = "SuperAdmin",
+                            NormalizedName = "SUPERADMIN"
+                        },
+                        new
+                        {
+                            Id = "ec1fc76c-bb87-4577-8c77-dbfde1d7c285",
+                            Active = true,
+                            ConcurrencyStamp = "2",
+                            CreatedAt = new DateTime(2023, 4, 26, 15, 25, 55, 837, DateTimeKind.Local).AddTicks(8660),
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "0a4c6d03-8df9-4fae-9a86-3e29a73ef89d",
+                            Active = true,
+                            ConcurrencyStamp = "3",
+                            CreatedAt = new DateTime(2023, 4, 26, 15, 25, 55, 837, DateTimeKind.Local).AddTicks(8729),
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.ApplicationRoleClaim", b =>
@@ -264,9 +293,6 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("UserRole")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserTypeId")
                         .HasColumnType("int");
 
@@ -284,6 +310,112 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "administrator",
+                            AccessFailedCount = 0,
+                            Activated = false,
+                            Address = "cashmingleaddress",
+                            Balance = 0m,
+                            ConcurrencyStamp = "bc5b3c04-c237-45b2-af05-e374db5cbca0",
+                            CreatedAt = new DateTime(2023, 4, 26, 15, 25, 55, 837, DateTimeKind.Local).AddTicks(8448),
+                            Deleted = false,
+                            Email = "cashmingle@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "cashMingleAdministrator",
+                            LastName = "cashMingleAdministrator",
+                            Lien = false,
+                            LockoutEnabled = false,
+                            NIN = "12345678900",
+                            PasswordHash = "123@Aa",
+                            PhoneNumber = "+2348080000000",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "c87b3b66-9893-4e4c-a16b-e4a9b64daa3d",
+                            TwoFactorEnabled = false,
+                            UserName = "superAdministrator",
+                            UserTypeId = 4,
+                            Verified = false
+                        },
+                        new
+                        {
+                            Id = "user1",
+                            AccessFailedCount = 0,
+                            Activated = false,
+                            Address = "cashmingleaddress",
+                            Balance = 0m,
+                            ConcurrencyStamp = "217b1189-ac63-4eff-880c-25bcd6dbbb8f",
+                            CreatedAt = new DateTime(2023, 4, 26, 15, 25, 55, 837, DateTimeKind.Local).AddTicks(8564),
+                            Deleted = false,
+                            Email = "cashmingle1@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "user1",
+                            LastName = "user1",
+                            Lien = false,
+                            LockoutEnabled = false,
+                            NIN = "12345678900",
+                            PasswordHash = "123@Aa",
+                            PhoneNumber = "+2348080000000",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "81eee415-a328-4116-978f-2a663fa220e6",
+                            TwoFactorEnabled = false,
+                            UserName = "user1",
+                            UserTypeId = 1,
+                            Verified = false
+                        },
+                        new
+                        {
+                            Id = "user2",
+                            AccessFailedCount = 0,
+                            Activated = false,
+                            Address = "cashmingleaddress",
+                            Balance = 0m,
+                            ConcurrencyStamp = "7efb4006-a5ae-4419-8227-e03bad518845",
+                            CreatedAt = new DateTime(2023, 4, 26, 15, 25, 55, 837, DateTimeKind.Local).AddTicks(8578),
+                            Deleted = false,
+                            Email = "cashmingle2@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "user2",
+                            LastName = "user2",
+                            Lien = false,
+                            LockoutEnabled = false,
+                            NIN = "12345678900",
+                            PasswordHash = "123@Aa",
+                            PhoneNumber = "+2348080000000",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "43882b76-bc46-4d84-b742-bf44572ad29f",
+                            TwoFactorEnabled = false,
+                            UserName = "user2",
+                            UserTypeId = 2,
+                            Verified = false
+                        },
+                        new
+                        {
+                            Id = "user3",
+                            AccessFailedCount = 0,
+                            Activated = false,
+                            Address = "cashmingleaddress",
+                            Balance = 0m,
+                            ConcurrencyStamp = "11611487-16de-4f24-bba8-68dc7784f138",
+                            CreatedAt = new DateTime(2023, 4, 26, 15, 25, 55, 837, DateTimeKind.Local).AddTicks(8610),
+                            Deleted = false,
+                            Email = "cashmingle3@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "user3",
+                            LastName = "user3",
+                            Lien = false,
+                            LockoutEnabled = false,
+                            NIN = "12345678900",
+                            PasswordHash = "123@Aa",
+                            PhoneNumber = "+2348080000000",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "d29635a8-04cd-42bd-a6da-96b1f9f1faf0",
+                            TwoFactorEnabled = false,
+                            UserName = "user3",
+                            UserTypeId = 3,
+                            Verified = false
+                        });
                 });
 
             modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.ApplicationUserClaim", b =>
@@ -327,13 +459,13 @@ namespace peer_to_peer_money_transfer.DAL.Migrations
 
             modelBuilder.Entity("peer_to_peer_money_transfer.DAL.Entities.ApplicationUserRole", b =>
                 {
-                    b.Property<int>("ApplicationUserId")
+                    b.Property<string>("ApplicationUserId")
                         .HasMaxLength(450)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ApplicationRoleId")
+                    b.Property<string>("ApplicationRoleId")
                         .HasMaxLength(450)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RoleId")
                         .IsRequired()

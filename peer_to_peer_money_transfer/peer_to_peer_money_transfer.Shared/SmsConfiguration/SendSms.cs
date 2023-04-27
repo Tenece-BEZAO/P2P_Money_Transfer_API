@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using peer_to_peer_money_transfer.Shared.Interfaces;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace peer_to_peer_money_transfer.Shared.SmsConfiguration
@@ -23,7 +22,7 @@ namespace peer_to_peer_money_transfer.Shared.SmsConfiguration
             try
             {
                 await client.GetFromJsonAsync<SmsModel>(
-                $"?api_token={token} &from=CashMingle&to={model.Receiver}&body={model.MessageBody}&dnd=2");
+                $"?api_token={token} &from=CashMingle&to={model.ReceiversPhoneNumber}&body={model.MessageBody}&dnd=2");
 
                 _logger.LogError("Message sent successfully");
                 return "Sms sent successfully";

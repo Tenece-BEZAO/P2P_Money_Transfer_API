@@ -1,7 +1,9 @@
-﻿namespace peer_to_peer_money_transfer.Shared.Interfaces
+﻿using peer_to_peer_money_transfer.Shared.EmailConfiguration;
+
+namespace peer_to_peer_money_transfer.Shared.Interfaces
 {
     public interface IEmailSender
     {
-        Task SendEmailAsync(string emailAdress, string message);
+        Task SendEmailAsync(Message message);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-namespace peer_to_peer_money_transfer.DAL.Enums
+﻿namespace peer_to_peer_money_transfer.DAL.Enums
 {
     public enum TransactionType
     {
@@ -7,7 +6,5 @@ namespace peer_to_peer_money_transfer.DAL.Enums
         Credit,
 	    Debit,
         Deposit
-
     }
 }
-

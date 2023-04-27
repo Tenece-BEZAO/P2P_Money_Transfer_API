@@ -8,9 +8,15 @@ namespace peer_to_peer_money_transfer.Shared.MapperConfigurations
     {
         public MapperInitializer()
         {
-            CreateMap<ApplicationUser, RegisterAdminDTO>().ReverseMap();
-            CreateMap<ApplicationUser, RegisterIndividualDTO>().ReverseMap();
-            CreateMap<ApplicationUser, RegisterBusinessDTO>().ReverseMap();
+            CreateMap<ApplicationUser, RegisterAdminDTO>().ReverseMap()
+                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
+
+            CreateMap<ApplicationUser, RegisterIndividualDTO>().ReverseMap()
+                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
+
+            CreateMap<ApplicationUser, RegisterBusinessDTO>().ReverseMap()
+                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
+
             CreateMap<ApplicationUser, GetCharacterDTO>().ReverseMap();
         }
     }

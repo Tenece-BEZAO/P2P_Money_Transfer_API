@@ -1,7 +1,4 @@
-﻿using peer_to_peer_money_transfer.DAL.DataTransferObject;
-using peer_to_peer_money_transfer.DAL.Entities;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using peer_to_peer_money_transfer.DAL.Entities;
 
 namespace peer_to_peer_money_transfer.Shared.Interfaces
 {
